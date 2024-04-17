@@ -66,9 +66,12 @@ export default function BirdFindScreen() {
                     ></View>
                 </View>
             </View>
-            <View className="absolute z-50 bg-transparent right-4 top-1/2 ">
+            <Pressable
+                onPress={() => router.replace("/birds/draw")}
+                className="absolute z-50 bg-transparent right-4 top-1/2 "
+            >
                 <AntDesign name="caretright" size={60} color="#59E659" />
-            </View>
+            </Pressable>
 
             <View className="absolute flex pl-48 items-center bg-[#FDD58D] justify-end w-full h-full">
                 <View
