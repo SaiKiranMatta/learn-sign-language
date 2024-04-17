@@ -12,6 +12,8 @@ import { router } from "expo-router";
 import React, { useState } from "react";
 import { Text, View } from "@/components/Themed";
 import { useAuth } from "@/context/AuthProvider";
+import * as ScreenOrientation from "expo-screen-orientation";
+ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 
 export default function LandingScreen() {
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
@@ -33,12 +35,12 @@ export default function LandingScreen() {
     return (
         <SafeAreaView className=" bg-[#FDD58D] pt-6 h-full ">
             <Image
-                source={require("../assets/images/old-woman.png")}
+                source={require("@/assets/images/old-woman.png")}
                 className="absolute bottom-0 left-0 z-50 w-36 h-36"
             />
             {cloudText !== "" && (
                 <ImageBackground
-                    source={require("../assets/images/talkingcloud.png")}
+                    source={require("@/assets/images/talkingcloud.png")}
                     className="absolute left-0 z-50 w-56 bottom-28 h-36"
                 >
                     <Text className="pt-10 pb-12 text-center px-7">
@@ -49,20 +51,21 @@ export default function LandingScreen() {
             <ScrollView horizontal={true} className="relative flex flex-1 ">
                 <View className="flex flex-row w-full h-full bg-[#FDD58D]">
                     <Image
-                        source={require("../assets/images/transperant.png")}
+                        source={require("@/assets/images/transperant.png")}
                         className="bottom-0 left-0 h-1 w-96"
                     />
                     <Image
-                        source={require("../assets/images/transperant.png")}
+                        source={require("@/assets/images/transperant.png")}
                         className="bottom-0 left-0 h-1 w-96"
                     />
                     <Image
-                        source={require("../assets/images/transperant.png")}
+                        source={require("@/assets/images/transperant.png")}
                         className="bottom-0 left-0 w-32 h-1"
                     />
 
                     <Pressable
                         className="absolute left-52 top-32"
+                        onPress={() => router.push("/birds/")}
                         onPressIn={() => handlePressIn("Birds", 1)}
                         onPressOut={() => handlePressOut()}
                     >
@@ -72,7 +75,7 @@ export default function LandingScreen() {
                             }`}
                         >
                             <Image
-                                source={require("../assets/images/bird.png")}
+                                source={require("@/assets/images/bird.png")}
                                 className="w-24 h-24 "
                             />
                         </View>
@@ -88,7 +91,7 @@ export default function LandingScreen() {
                             }`}
                         >
                             <Image
-                                source={require("../assets/images/bird.png")}
+                                source={require("@/assets/images/bird.png")}
                                 className="w-16 h-16 "
                             />
                         </View>
@@ -104,7 +107,7 @@ export default function LandingScreen() {
                             }`}
                         >
                             <Image
-                                source={require("../assets/images/bird.png")}
+                                source={require("@/assets/images/bird.png")}
                                 className="w-8 h-8 "
                             />
                         </View>
@@ -120,7 +123,7 @@ export default function LandingScreen() {
                             }`}
                         >
                             <Image
-                                source={require("../assets/images/bird.png")}
+                                source={require("@/assets/images/bird.png")}
                                 className="w-24 h-24 "
                             />
                         </View>
@@ -136,7 +139,7 @@ export default function LandingScreen() {
                             }`}
                         >
                             <Image
-                                source={require("../assets/images/bird.png")}
+                                source={require("@/assets/images/bird.png")}
                                 className="w-12 h-12 "
                             />
                         </View>
@@ -152,7 +155,7 @@ export default function LandingScreen() {
                             }`}
                         >
                             <Image
-                                source={require("../assets/images/bird.png")}
+                                source={require("@/assets/images/bird.png")}
                                 className=" w-28 h-28"
                             />
                         </View>
