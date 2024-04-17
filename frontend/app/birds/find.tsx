@@ -14,9 +14,11 @@ import { Text, View } from "@/components/Themed";
 import { useAuth } from "@/context/AuthProvider";
 import { AntDesign } from "@expo/vector-icons";
 
-export default function BirdHomeScreen() {
+export default function BirdFindScreen() {
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
-    const [cloudText, setCloudText] = useState<string>("Birds");
+    const [cloudText, setCloudText] = useState<string>(
+        "Find the Birds on the Tree!"
+    );
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
     // Function to handle press on feature pressables
@@ -42,51 +44,36 @@ export default function BirdHomeScreen() {
                     source={require("@/assets/images/talkingcloud.png")}
                     className="absolute left-0 z-50 w-56 bottom-28 h-36"
                 >
-                    <Text className="pt-10 pb-12 text-2xl text-center px-7">
+                    <Text className="pt-10 pb-12 text-xl text-center text-green-600 px-7">
                         {cloudText}
                     </Text>
                 </ImageBackground>
             )}
-            <View className="flex flex-row w-full h-full bg-[#DBB780]">
-                <Image
-                    source={require("@/assets/images/transperant.png")}
-                    className="bottom-0 left-0 z-0 h-1 w-96"
-                />
-                <Image
-                    source={require("@/assets/images/transperant.png")}
-                    className="bottom-0 left-0 z-0 h-1 w-96"
-                />
-                <Image
-                    source={require("@/assets/images/transperant.png")}
-                    className="bottom-0 left-0 z-0 w-32 h-1"
-                />
-            </View>
-            <View className="absolute z-50 flex flex-row items-center p-2 rounded-md top-10 right-4">
+
+            <View className="absolute z-50 flex flex-row items-center p-2 rounded-md top-10 left-4">
                 <Image
                     source={require("@/assets/images/brain.png")}
                     className="w-6 h-6 mr-2"
                 />
                 <View className="flex justify-start w-48 h-8 bg-green-300 rounded-md">
-                    <View className="w-4 h-8 bg-green-600 rounded-md"></View>
+                    <View className="w-6 h-8 bg-green-600 rounded-md"></View>
                 </View>
             </View>
-            <Pressable
-                onPress={() => router.push("/birds/find")}
-                className="absolute z-50 bg-transparent right-4 top-1/2 "
-            >
+            <View className="absolute z-50 bg-transparent right-4 top-1/2 ">
                 <AntDesign name="caretright" size={60} color="#59E659" />
-            </Pressable>
+            </View>
 
-            <View className="absolute flex items-center bg-[#FDD58D] justify-center w-full h-full">
+            <View className="absolute flex pl-48 items-center bg-[#FDD58D] justify-end w-full h-full">
                 <View
-                    className={`rounded-full  p-8 bg-[#DBB780] ${
+                    className={`  p-2 rounded-lg bg-[#DBB780] ${
                         activeIndex === 4 ? "scale-105" : ""
                     }`}
                 >
                     <Image
-                        source={require("@/assets/images/bird.png")}
-                        className="w-36 h-36 "
+                        source={require("@/assets/images/Birds/bird-on-tree.jpg")}
+                        className="rounded-lg h-72 w-96"
                     />
+                    <View className="absolute w-12 h-12 bg-transparent border left-48 top-9"></View>
                 </View>
             </View>
         </SafeAreaView>
