@@ -71,7 +71,7 @@ export default function BirdHomeScreen() {
                 </View>
             </View>
             <Pressable
-                onPress={() => router.push("/birds/find")}
+                onPress={() => router.replace("/birds/find")}
                 className="absolute z-50 bg-transparent right-4 top-1/2 "
             >
                 <AntDesign name="caretright" size={60} color="#59E659" />

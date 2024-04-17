@@ -20,9 +20,14 @@ export default function BirdFindScreen() {
         "Find the Birds on the Tree!"
     );
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
-
+    const [border, setBorder] = useState<string>("");
+    const [progressWidth, setProgressWidth] = useState<string>("6");
     // Function to handle press on feature pressables
-
+    const handleObjectPress = () => {
+        setProgressWidth("8");
+        setBorder("border border-2 border-green-600");
+        setCloudText("Good Job, Bird Found!");
+    };
     const handlePressIn = (text: string, index: number) => {
         setCloudText(text);
         setActiveIndex(index);
@@ -56,7 +61,9 @@ export default function BirdFindScreen() {
                     className="w-6 h-6 mr-2"
                 />
                 <View className="flex justify-start w-48 h-8 bg-green-300 rounded-md">
-                    <View className="w-6 h-8 bg-green-600 rounded-md"></View>
+                    <View
+                        className={`w-${progressWidth} h-8 bg-green-600 rounded-md`}
+                    ></View>
                 </View>
             </View>
             <View className="absolute z-50 bg-transparent right-4 top-1/2 ">
@@ -73,7 +80,10 @@ export default function BirdFindScreen() {
                         source={require("@/assets/images/Birds/bird-on-tree.jpg")}
                         className="rounded-lg h-72 w-96"
                     />
-                    <View className="absolute w-12 h-12 bg-transparent border left-48 top-9"></View>
+                    <Pressable
+                        onPress={handleObjectPress}
+                        className={`absolute w-12 h-12 bg-transparent ${border} left-48 top-9`}
+                    ></Pressable>
                 </View>
             </View>
         </SafeAreaView>
