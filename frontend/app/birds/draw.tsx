@@ -30,6 +30,7 @@ export default function BirdFindScreen() {
     const [isClearButtonClicked, setClearButtonClicked] =
         useState<boolean>(false);
     const viewShotRef = useRef<any>(null);
+    const [doc, setDoc] = useState<any>(null);
 
     const onTouchEnd = () => {
         setPaths([...paths, currentPath.join("")]);
@@ -61,31 +62,29 @@ export default function BirdFindScreen() {
     };
 
     const handleSubmitButtonClick = async () => {
+        onTouchEnd();
         try {
-            // Capture the image
-            const uri = await viewShotRef?.current?.capture();
+            const svgData = `<svg width="192" height="288"><rect x="0" y="0" width="100%" height="100%" fill="white" />
+            <path d="${paths.join("")}" stroke="${
+                isClearButtonClicked ? "transparent" : "black"
+            }" fill="transparent" stroke-width="10" strokeLinejoin="round" strokeLinecap="round" /></svg>`;
 
-            // Create a Blob from the captured image URI
-            const blob = await fetch(uri).then((response) => response.blob());
+            const response = await fetch(
+                "http://192.168.29.52:8000/convert-svg-to-png",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ svgData }),
+                }
+            );
 
-            // Create FormData and append the Blob with metadata
-            const formData = new FormData();
-            formData.append("image", blob, "drawing.png");
-
-            // Now you can send the image to the backend using fetch or any other method
-            const response = await fetch("YOUR_BACKEND_ENDPOINT", {
-                method: "POST",
-                body: formData,
-            });
-
-            // Handle response from the backend
-            // For example:
             if (response.ok) {
-                // Image successfully sent to the backend
-                // Handle success
+                const data = await response.json();
+                console.log(data);
             } else {
-                // Error occurred while sending image
-                // Handle error
+                console.error("Error:", response.statusText);
             }
         } catch (error) {
             console.error("Error:", error);
@@ -155,14 +154,14 @@ export default function BirdFindScreen() {
                         activeIndex === 4 ? "scale-105" : ""
                     }`}
                 >
-                    <View
-                        className="flex items-center justify-center w-48 rounded-lg bg-slate-100 h-72"
-                        onTouchMove={onTouchMove}
-                        onTouchEnd={onTouchEnd}
+                    <ViewShot
+                        ref={viewShotRef}
+                        options={{ format: "png", quality: 1 }}
                     >
-                        <ViewShot
-                            ref={viewShotRef}
-                            options={{ format: "png", quality: 1 }}
+                        <View
+                            className="flex items-center justify-center w-48 rounded-lg bg-slate-100 h-72"
+                            onTouchMove={onTouchMove}
+                            onTouchEnd={onTouchEnd}
                         >
                             <Svg className="w-full h-full">
                                 <Path
@@ -173,7 +172,7 @@ export default function BirdFindScreen() {
                                             : "red"
                                     }
                                     fill="transparent"
-                                    strokeWidth={3}
+                                    strokeWidth={10}
                                     strokeLinejoin="round"
                                     strokeLinecap="round"
                                 />
@@ -188,14 +187,14 @@ export default function BirdFindScreen() {
                                                     : "red"
                                             }
                                             fill="transparent"
-                                            strokeWidth={2}
+                                            strokeWidth={10}
                                             strokeLinejoin="round"
                                             strokeLinecap="round"
                                         />
                                     ))}
                             </Svg>
-                        </ViewShot>
-                    </View>
+                        </View>
+                    </ViewShot>
                     <TouchableOpacity
                         className="absolute z-10 rounded-full bg-transperant bottom-4 left-4 "
                         onPress={handleClearButtonClick}
