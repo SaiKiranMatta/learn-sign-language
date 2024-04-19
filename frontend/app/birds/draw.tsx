@@ -129,9 +129,14 @@ export default function BirdFindScreen() {
                     ></View>
                 </View>
             </View>
-            <View className="absolute z-50 bg-transparent right-4 top-1/2 ">
+            <TouchableOpacity
+                onPress={() => {
+                    router.replace("/birds/detec");
+                }}
+                className="absolute z-50 bg-transparent right-4 top-1/2 "
+            >
                 <AntDesign name="caretright" size={60} color="#59E659" />
-            </View>
+            </TouchableOpacity>
 
             <View className="absolute flex flex-row pl-64 items-end bg-[#FDD58D] justify-start w-full h-full">
                 <View

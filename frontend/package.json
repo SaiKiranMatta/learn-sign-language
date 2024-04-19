@@ -13,6 +13,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@config-plugins/react-native-webrtc": "^8.0.0",
     "@expo/vector-icons": "^14.0.0",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-navigation/native": "^6.0.2",
@@ -34,7 +35,8 @@
     "react-native-screens": "~3.29.0",
     "react-native-svg": "^15.1.0",
     "react-native-view-shot": "^3.8.0",
-    "react-native-web": "~0.19.6"
+    "react-native-web": "~0.19.6",
+    "react-native-webrtc": "^118.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
