@@ -1,5 +1,4 @@
 import pickle
-
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -80,24 +79,25 @@ while True:
                 data_aux.append(x - min(x_))
                 data_aux.append(y - min(y_))
 
-        x1 = int(min(x_) * W) - 10
-        y1 = int(min(y_) * H) - 10
+        # x1 = int(min(x_) * W) - 10
+        # y1 = int(min(y_) * H) - 10
 
-        x2 = int(max(x_) * W) - 10
-        y2 = int(max(y_) * H) - 10
+        # x2 = int(max(x_) * W) - 10
+        # y2 = int(max(y_) * H) - 10
 
         prediction = model.predict([np.asarray(data_aux)])
 
         predicted_character = labels_dict[int(prediction[0])]
 
-        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 0), 4)
-        cv2.putText(frame, predicted_character, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 0, 0), 3,
-                    cv2.LINE_AA)
-
+        # cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 0), 4)
+        # cv2.putText(frame, predicted_character, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 0, 0), 3,
+        #             cv2.LINE_AA)
+        print("Predicted character:", predicted_character)
     cv2.imshow('frame', frame)
     key = cv2.waitKey(1)
     if key == 27:  # Escape key
         break
+
 
 cap.release()
 cv2.destroyAllWindows()

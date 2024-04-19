@@ -309,21 +309,21 @@ export default function SignDetectScreen() {
     useEffect(() => {
         const url = `${API_BASE_URL}/live_labels`;
         if (isRemoteDescSet) {
-            setInterval(() => {
-                fetch(url)
-                    .then((response) => {
-                        if (!response.ok) {
-                            throw new Error("Network response was not ok");
-                        }
-                        return response.json();
-                    })
-                    .then((data) => {
-                        // console.log(data);
-                        setTranslatedText(data.labels);
-                        // Do something with the response data if needed
-                    })
-                    .catch((error) => console.error("Error:", error));
-            }, 1000);
+            // setInterval(() => {
+            //     fetch(url)
+            //         .then((response) => {
+            //             if (!response.ok) {
+            //                 throw new Error("Network response was not ok");
+            //             }
+            //             return response.json();
+            //         })
+            //         .then((data) => {
+            //             // console.log(data);
+            //             setTranslatedText(data.labels);
+            //             // Do something with the response data if needed
+            //         })
+            //         .catch((error) => console.error("Error:", error));
+            // }, 1000);
         }
     }, [isRemoteDescSet]);
 
@@ -375,7 +375,7 @@ export default function SignDetectScreen() {
                                         className="w-full h-full "
                                     />
                                 ) : (
-                                    <View className="flex flex-col items-center justify-center w-full h-full bg-slate-900 ">
+                                    <View className="flex flex-col items-center justify-center w-full h-full bg-[#DBB780] ">
                                         <Image
                                             source={require("@/assets/images/disabled-cam.png")}
                                         />
