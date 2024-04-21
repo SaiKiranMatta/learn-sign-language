@@ -29,16 +29,11 @@ import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function SignDetectScreen() {
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
-    const [cloudText, setCloudText] = useState<string>("Detect the Letter!");
+    const [cloudText, setCloudText] = useState<string>(
+        "Sign the missing Letters!"
+    );
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
-    const [border, setBorder] = useState<string>("");
-    const [progressWidth, setProgressWidth] = useState<string>("6");
-    const [paths, setPaths] = useState<string[]>([]);
-    const [currentPath, setCurrentPath] = useState<string[]>([]);
-    const [isClearButtonClicked, setClearButtonClicked] =
-        useState<boolean>(false);
-    const viewShotRef = useRef<any>(null);
-    const [doc, setDoc] = useState<any>(null);
+    const [progressWidth, setProgressWidth] = useState<string>("8");
 
     const [localStream, setLocalStream] = useState<MediaStream>();
     const [remoteStream, setRemoteStream] = useState<any>(null);
@@ -50,6 +45,10 @@ export default function SignDetectScreen() {
     const [recSdp, setRecSdp] = useState("");
     const [ansSdp, setAnsSdp] = useState();
     const [isRemoteDescSet, setIsRemoteDescSet] = useState<boolean>(false);
+    const [ans, setAns] = useState<String[]>(["", ""]);
+    const firstAnswer = "B";
+    const secondAnswer = "S";
+    const [firstAnsFound, setFirstAnsFound] = useState<boolean>(false);
     const [translatedText, setTranslatedText] = useState<string>("loading...");
     const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
     const configuration = {
@@ -185,6 +184,7 @@ export default function SignDetectScreen() {
             setCachedLocalPC(null);
             setRemoteStream(null);
             setIsRemoteDescSet(false);
+            setIsLive(false);
             ws?.send(JSON.stringify({ type: "end_track" }));
         }
     };
@@ -256,45 +256,6 @@ export default function SignDetectScreen() {
                 );
             }
         };
-        // newWs.onmessage = async (event) => {
-        //     // Receive SDP or ICE candidate from backend over WebSocket
-        //     console.log(event.data);
-        //     const sdp = event.data;
-        //     // Check if the message is an SDP offer or answer
-        //     if (sdp.startsWith("v=")) {
-        //         // SDP offer
-        //         console.log("Received SDP offer");
-        //         setRecSdp(sdp);
-
-        //         cachedLocalPC
-        //             ?.setRemoteDescription(
-        //                 new RTCSessionDescription({
-        //                     type: "offer",
-        //                     sdp: sdp,
-        //                 })
-        //             )
-        //             .then(() => {
-        //                 console.log("SDP offer set as remote description");
-        //             })
-        //             .catch((error: any) => {
-        //                 console.error(
-        //                     "Error setting remote description:",
-        //                     error
-        //                 );
-        //             });
-        //         // Handle the SDP offer (set as remote description)
-        //     } else {
-        //         // SDP answer or other message type
-        //         console.log("Received SDP answer or other message type");
-        //         // Handle SDP answer if needed
-        //         // Example: set as remote description
-
-        //         const answer = new RTCSessionDescription({
-        //             type: "answer",
-        //             sdp: sdp,
-        //         });
-        //     }
-        // };
 
         newWs.onclose = () => {
             console.log("WebSocket disconnected");
@@ -308,24 +269,53 @@ export default function SignDetectScreen() {
 
     useEffect(() => {
         const url = `${API_BASE_URL}/live_labels`;
+
         if (isRemoteDescSet) {
-            // setInterval(() => {
-            //     fetch(url)
-            //         .then((response) => {
-            //             if (!response.ok) {
-            //                 throw new Error("Network response was not ok");
-            //             }
-            //             return response.json();
-            //         })
-            //         .then((data) => {
-            //             // console.log(data);
-            //             setTranslatedText(data.labels);
-            //             // Do something with the response data if needed
-            //         })
-            //         .catch((error) => console.error("Error:", error));
-            // }, 1000);
+            const fetchData = () => {
+                fetch(url)
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error("Network response was not ok");
+                        }
+                        return response.json();
+                    })
+                    .then((data) => {
+                        const labels = data.labels;
+                        console.log(firstAnsFound);
+                        // Check if the first answer is found
+                        if (!firstAnsFound) {
+                            if (labels.includes(firstAnswer)) {
+                                console.log(
+                                    "First answer matched:",
+                                    firstAnswer
+                                );
+                                setFirstAnsFound(true);
+                                setAns([firstAnswer, ""]);
+                            }
+                        } else {
+                            // Check if the second answer is found
+                            if (labels.includes(secondAnswer)) {
+                                console.log(
+                                    "Second answer matched:",
+                                    secondAnswer
+                                );
+                                setAns([firstAnswer, secondAnswer]);
+                                // Clear the interval to exit the loop
+                                clearInterval(interval);
+                                setCloudText("Good Job");
+                                setProgressWidth("24");
+                                stopCall();
+                            }
+                        }
+                    })
+                    .catch((error) => console.error("Error:", error));
+            };
+
+            const interval = setInterval(fetchData, 1000);
+
+            return () => clearInterval(interval);
         }
-    }, [isRemoteDescSet]);
+    }, [isRemoteDescSet, firstAnswer, secondAnswer, firstAnsFound]);
 
     return (
         <SafeAreaView className=" bg-[#FDD58D] pt-6 h-full ">
@@ -344,7 +334,7 @@ export default function SignDetectScreen() {
                 </ImageBackground>
             )}
 
-            <View className="absolute z-50 flex flex-row items-center p-2 rounded-md top-10 left-4">
+            <View className="absolute z-50 flex flex-row items-center p-2 bg-white rounded-md top-10 left-4">
                 <Image
                     source={require("@/assets/images/brain.png")}
                     className="w-6 h-6 mr-2"
@@ -359,7 +349,7 @@ export default function SignDetectScreen() {
                 <AntDesign name="caretright" size={60} color="#59E659" />
             </View>
 
-            <View className="absolute flex flex-row pl-64 items-end bg-[#FDD58D] justify-start w-full h-full">
+            <View className="absolute flex flex-row pl-64 items-start mt-10 bg-[#FDD58D] justify-start w-full h-full">
                 <View
                     className={` ml-2 p-2  rounded-lg  bg-[#DBB780] ${
                         activeIndex === 4 ? "scale-105" : ""
@@ -425,18 +415,51 @@ export default function SignDetectScreen() {
                     </View>
                 </View>
                 <View
-                    className={` ml-4 p-2 rounded-lg bg-[#DBB780] ${
-                        activeIndex === 4 ? "scale-105" : ""
-                    }`}
+                    className={` ml-4  mt-2 rounded-lg flex flex-col justify-between  bg-[#FDD58D]`}
                 >
                     <Image
-                        source={require("@/assets/images/Birds/bird-on-tree.jpg")}
-                        className="w-48 rounded-lg h-72"
+                        source={require("@/assets/images/Birds/birds-in-sky.jpg")}
+                        className="w-48 h-48 rounded-lg "
                     />
-                    <Pressable
-                        // onPress={handleObjectPress}
-                        className={`absolute w-12 h-12 bg-transparent ${border} left-48 top-9`}
-                    ></Pressable>
+                    <View className="flex flex-row items-center justify-start ">
+                        <View className=" p-2 pb-1  w-8 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
+                            <Text
+                                className={`text-2xl text-center font-bold  ${
+                                    ans[0] === "B"
+                                        ? "text-green-600"
+                                        : "text-red-600"
+                                }`}
+                            >
+                                {ans[0]}
+                            </Text>
+                        </View>
+                        <View className=" p-2 w-8 pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
+                            <Text className="text-2xl text-center font-bold text-[#FECE78]">
+                                I
+                            </Text>
+                        </View>
+                        <View className=" p-2 pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
+                            <Text className="text-2xl font-bold text-[#FECE78]">
+                                R
+                            </Text>
+                        </View>
+                        <View className=" p-2 pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
+                            <Text className="text-2xl font-bold text-[#FECE78]">
+                                D
+                            </Text>
+                        </View>
+                        <View className=" p-2 w-8  pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
+                            <Text
+                                className={`text-2xl text-center font-bold  ${
+                                    ans[1] === "S"
+                                        ? "text-green-600"
+                                        : "text-red-600"
+                                }`}
+                            >
+                                {ans[1]}
+                            </Text>
+                        </View>
+                    </View>
                 </View>
             </View>
         </SafeAreaView>
