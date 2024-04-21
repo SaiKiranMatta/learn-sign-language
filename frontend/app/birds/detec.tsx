@@ -33,7 +33,7 @@ export default function SignDetectScreen() {
         "Sign the missing Letters!"
     );
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
-    const [progressWidth, setProgressWidth] = useState<string>("8");
+    const [progressWidth, setProgressWidth] = useState<string>("36");
 
     const [localStream, setLocalStream] = useState<MediaStream>();
     const [remoteStream, setRemoteStream] = useState<any>(null);
@@ -303,7 +303,7 @@ export default function SignDetectScreen() {
                                 // Clear the interval to exit the loop
                                 clearInterval(interval);
                                 setCloudText("Good Job");
-                                setProgressWidth("24");
+                                setProgressWidth("48");
                                 stopCall();
                             }
                         }

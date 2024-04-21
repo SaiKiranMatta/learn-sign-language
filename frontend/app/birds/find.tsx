@@ -21,10 +21,10 @@ export default function BirdFindScreen() {
     );
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [border, setBorder] = useState<string>("");
-    const [progressWidth, setProgressWidth] = useState<string>("6");
+    const [progressWidth, setProgressWidth] = useState<string>("12");
     // Function to handle press on feature pressables
     const handleObjectPress = () => {
-        setProgressWidth("8");
+        setProgressWidth("24");
         setBorder("border border-2 border-green-600");
         setCloudText("Good Job, Bird Found!");
     };
