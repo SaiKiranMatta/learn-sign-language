@@ -18,6 +18,7 @@ export default function BirdHomeScreen() {
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
     const [cloudText, setCloudText] = useState<string>("Birds");
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
+    const [progressWidth, setProgressWidth] = useState<number>(6);
 
     // Function to handle press on feature pressables
 
@@ -67,7 +68,9 @@ export default function BirdHomeScreen() {
                     className="w-6 h-6 mr-2"
                 />
                 <View className="flex justify-start w-48 h-8 bg-green-300 rounded-md">
-                    <View className="w-4 h-8 bg-green-600 rounded-md"></View>
+                    <View
+                        className={`w-${progressWidth} h-8 bg-green-600 rounded-md`}
+                    ></View>
                 </View>
             </View>
             <Pressable

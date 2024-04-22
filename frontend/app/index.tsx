@@ -7,9 +7,10 @@ import {
     SafeAreaView,
     ScrollView,
     StyleSheet,
+    TouchableOpacity,
 } from "react-native";
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View } from "@/components/Themed";
 import { useAuth } from "@/context/AuthProvider";
 import * as ScreenOrientation from "expo-screen-orientation";
@@ -23,13 +24,32 @@ export default function LandingScreen() {
     // Function to handle press on feature pressables
 
     const handlePressIn = (text: string, index: number) => {
-        setCloudText(text);
-        setActiveIndex(index);
+        if (user) {
+            // router.push(location);
+            setCloudText(text);
+            setActiveIndex(index);
+        } else {
+            setCloudText("Please Login");
+            setTimeout(() => {
+                setCloudText("");
+            }, 2000);
+        }
     };
 
     const handlePressOut = () => {
         setCloudText("");
         setActiveIndex(null);
+    };
+
+    const handlePress = (location: any) => {
+        if (user) {
+            router.push(location);
+        } else {
+            setCloudText("Please Login");
+            setTimeout(() => {
+                setCloudText("");
+            }, 2000);
+        }
     };
 
     return (
@@ -38,12 +58,36 @@ export default function LandingScreen() {
                 source={require("@/assets/images/old-woman.png")}
                 className="absolute bottom-0 left-0 z-50 w-36 h-36"
             />
+            {!user ? (
+                <TouchableOpacity
+                    onPress={() => {
+                        router.push("/login");
+                    }}
+                    className="absolute z-40 w-24 px-4 py-2 bg-orange-400 shadow-lg top-7 right-6 rounded-3xl"
+                >
+                    <Text className="text-lg text-center text-white">
+                        Login
+                    </Text>
+                </TouchableOpacity>
+            ) : (
+                <TouchableOpacity
+                    onPress={() => {
+                        signOut();
+                    }}
+                    className="absolute z-40 w-24 px-4 py-2 bg-orange-400 shadow-lg top-7 right-6 rounded-3xl"
+                >
+                    <Text className="text-lg text-center text-white">
+                        Logout
+                    </Text>
+                </TouchableOpacity>
+            )}
+
             {cloudText !== "" && (
                 <ImageBackground
                     source={require("@/assets/images/talkingcloud.png")}
                     className="absolute left-0 z-50 w-56 bottom-28 h-36"
                 >
-                    <Text className="pt-10 pb-12 text-center px-7">
+                    <Text className="pt-10 pb-12 text-xl text-center text-green-600 px-7">
                         {cloudText}
                     </Text>
                 </ImageBackground>
@@ -65,7 +109,7 @@ export default function LandingScreen() {
 
                     <Pressable
                         className="absolute left-52 top-32"
-                        onPress={() => router.push("/birds/")}
+                        onPress={() => handlePress("/birds")}
                         onPressIn={() => handlePressIn("Birds", 1)}
                         onPressOut={() => handlePressOut()}
                     >

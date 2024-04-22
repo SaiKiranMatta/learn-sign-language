@@ -3,8 +3,10 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 import { Text, View } from "@/components/Themed";
 import { useEffect, useState } from "react";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { useAuth } from "@/context/AuthProvider";
+import * as ScreenOrientation from "expo-screen-orientation";
+ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 
 export default function LoginScreen() {
     const [email, setEmail] = useState<string>("");
@@ -13,7 +15,7 @@ export default function LoginScreen() {
 
     useEffect(() => {
         if (user) {
-            router.replace("/(tabs)");
+            router.replace("/");
         }
     }, [user]);
 
@@ -25,7 +27,7 @@ export default function LoginScreen() {
         }
     };
     return (
-        <View className="items-center justify-center flex-1 bg-slate-100 dark:bg-slate-800">
+        <View className="items-center justify-center flex-1 bg-[#FDD58D] ">
             <Text className="mb-4 text-2xl">Login</Text>
             <TextInput
                 className="w-4/5 p-4 mb-4 bg-white border rounded-md"
@@ -41,10 +43,16 @@ export default function LoginScreen() {
             />
             <Pressable
                 onPress={handleLogin}
-                className="w-2/5 p-4 bg-blue-500 rounded-md "
+                className="w-2/5 px-4 py-2 bg-[#DBB780] shadow-lg border-[0.7px] rounded-md "
             >
-                <Text className="text-center text-white">Login</Text>
+                <Text className="text-2xl text-center text-white">Login</Text>
             </Pressable>
+            <Text className="mt-4 text-lg">
+                Don't have an account?{" "}
+                <Link href="/register" className="text-blue-500">
+                    Register
+                </Link>
+            </Text>
         </View>
     );
 }
