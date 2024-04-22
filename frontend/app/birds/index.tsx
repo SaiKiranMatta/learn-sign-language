@@ -7,9 +7,10 @@ import {
     SafeAreaView,
     ScrollView,
     StyleSheet,
+    TouchableOpacity,
 } from "react-native";
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View } from "@/components/Themed";
 import { useAuth } from "@/context/AuthProvider";
 import { AntDesign } from "@expo/vector-icons";
@@ -32,6 +33,12 @@ export default function BirdHomeScreen() {
         setActiveIndex(null);
     };
 
+    useEffect(() => {
+        if (!user) {
+            router.replace("/");
+        }
+    }, [user]);
+
     return (
         <SafeAreaView className=" bg-[#FDD58D] pt-6 h-full ">
             <Image
@@ -47,6 +54,29 @@ export default function BirdHomeScreen() {
                         {cloudText}
                     </Text>
                 </ImageBackground>
+            )}
+            {!user ? (
+                <TouchableOpacity
+                    onPress={() => {
+                        router.push("/login");
+                    }}
+                    className="absolute z-40 w-24 px-4 py-2 bg-orange-400 shadow-lg top-10 left-6 rounded-3xl"
+                >
+                    <Text className="text-lg text-center text-white">
+                        Login
+                    </Text>
+                </TouchableOpacity>
+            ) : (
+                <TouchableOpacity
+                    onPress={() => {
+                        signOut();
+                    }}
+                    className="absolute z-40 w-24 px-4 py-2 bg-orange-400 shadow-lg top-10 left-6 rounded-3xl"
+                >
+                    <Text className="text-lg text-center text-white">
+                        Logout
+                    </Text>
+                </TouchableOpacity>
             )}
             <View className="flex flex-row w-full h-full bg-[#DBB780]">
                 <Image
