@@ -12,15 +12,16 @@ import {
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Text, View } from "@/components/Themed";
-import { useAuth } from "@/context/AuthProvider";
+import { db, useAuth } from "@/context/AuthProvider";
 import { AntDesign } from "@expo/vector-icons";
+import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
 
 export default function BirdHomeScreen() {
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
     const [cloudText, setCloudText] = useState<string>("Birds");
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [progressWidth, setProgressWidth] = useState<number>(6);
-
+    const [birdLevel, setBirdLevel] = useState<string | null>();
     // Function to handle press on feature pressables
 
     const handlePressIn = (text: string, index: number) => {
@@ -34,10 +35,43 @@ export default function BirdHomeScreen() {
     };
 
     useEffect(() => {
-        if (!user) {
-            router.replace("/");
-        }
-    }, [user]);
+        const addUserDocument = async () => {
+            if (!user) {
+                router.replace("/");
+            } else {
+                if (!birdLevel) {
+                    const docRef = doc(db, "users", user.uid);
+                    const docSnap = await getDoc(docRef);
+                    if (!docSnap.exists()) {
+                        try {
+                            const usersRef = collection(db, "users");
+                            const docRef = await setDoc(
+                                doc(usersRef, user.uid),
+                                {
+                                    birds: 1,
+                                    animals: 1,
+                                    bodyparts: 1,
+                                    everyDayObjects: 1,
+                                    shapes: 1,
+                                    sports: 1,
+                                }
+                            );
+
+                            console.log("Document written  ");
+                        } catch (e) {
+                            console.error("Error adding document: ", e);
+                        }
+                    } else {
+                        // console.log("Document data:", docSnap.data());
+                        setBirdLevel(docSnap.data().birds);
+                        // console.log(birdLevel);
+                    }
+                }
+            }
+        };
+
+        addUserDocument();
+    }, [user, birdLevel, setBirdLevel]);
 
     return (
         <SafeAreaView className=" bg-[#FDD58D] pt-6 h-full ">
