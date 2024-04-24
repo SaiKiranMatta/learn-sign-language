@@ -24,24 +24,10 @@ export default function BirdAlphaScreen() {
     const [cloudText, setCloudText] = useState<string>("Learn these signs!");
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [border, setBorder] = useState<string>("");
-    const [progressWidth, setProgressWidth] = useState<string>("w-[1px]");
+    const [progressWidth, setProgressWidth] = useState<number>(0);
     const [birdLevel, setBirdLevel] = useState<number | null>();
     // Function to handle press on feature pressables
-    const [userData, setUserData] = useState<any>(null); // Function to handle press on feature pressables
-    const handleObjectPress = () => {
-        setProgressWidth("24");
-        setBorder("border border-2 border-green-600");
-        setCloudText("Good Job, Bird Found!");
-    };
-    const handlePressIn = (text: string, index: number) => {
-        setCloudText(text);
-        setActiveIndex(index);
-    };
-
-    const handlePressOut = () => {
-        setCloudText("");
-        setActiveIndex(null);
-    };
+    const [userData, setUserData] = useState<any>(null);
 
     useEffect(() => {
         if (!user) {
@@ -109,14 +95,6 @@ export default function BirdAlphaScreen() {
                     } else {
                         // console.log("Document data:", docSnap.data());
                         setUserData(docSnap.data());
-                        setBirdLevel(
-                            docSnap
-                                .data()
-                                .birds.cLArray.reduce(
-                                    (acc: number, cur: number) => acc + cur,
-                                    0
-                                )
-                        ); // console.log(birdLevel);
                     }
                 }
             }
@@ -124,6 +102,17 @@ export default function BirdAlphaScreen() {
 
         addUserDocument();
     }, [user, birdLevel, setBirdLevel]);
+
+    useEffect(() => {
+        if (userData) {
+            setProgressWidth(
+                userData.birds.cLArray.reduce(
+                    (acc: number, cur: number) => acc + cur,
+                    0
+                )
+            );
+        }
+    }, [userData, setProgressWidth]);
 
     return (
         <SafeAreaView className=" bg-[#FDD58D] pt-6 h-full ">
@@ -166,13 +155,13 @@ export default function BirdAlphaScreen() {
             )}
             <View className="absolute z-50 flex flex-row items-center bg-transparent top-10 left-4">
                 <TouchableOpacity
-                    onPress={() => router.replace("/birds/draw")}
+                    onPress={() => router.replace("/birds/")}
                     className=""
                 >
                     <AntDesign name="caretleft" size={30} color="#FB923C" />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => router.replace("/birds/draw")}
+                    onPress={() => router.replace("/")}
                     className=""
                 >
                     <MaterialCommunityIcons
@@ -186,10 +175,19 @@ export default function BirdAlphaScreen() {
                         source={require("@/assets/images/brain.png")}
                         className="w-6 h-6 mr-2"
                     />
-                    <View className="flex justify-start w-48 h-8 bg-green-300 rounded-md">
+                    <View className="flex flex-row w-48 h-8 overflow-hidden bg-green-300 rounded-md">
                         <View
-                            className={`w-${progressWidth} h-8 bg-green-600 rounded-md`}
+                            className={` w-4 h-8 bg-green-600 rounded-l-md `}
                         ></View>
+                        {Array.from(
+                            { length: progressWidth - 1 },
+                            (_, index) => (
+                                <View
+                                    key={index}
+                                    className="w-4 h-8 bg-green-600 "
+                                ></View>
+                            )
+                        )}
                     </View>
                 </View>
             </View>

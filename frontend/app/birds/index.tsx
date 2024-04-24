@@ -20,7 +20,7 @@ export default function BirdHomeScreen() {
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
     const [cloudText, setCloudText] = useState<string>("Birds");
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
-    const [progressWidth, setProgressWidth] = useState<string>("w-[1px]");
+    const [progressWidth, setProgressWidth] = useState<number>(0);
     const [birdLevel, setBirdLevel] = useState<number | null>();
     // Function to handle press on feature pressables
     const [userData, setUserData] = useState<any>(null);
@@ -137,14 +137,6 @@ export default function BirdHomeScreen() {
                     } else {
                         // console.log("Document data:", docSnap.data());
                         setUserData(docSnap.data());
-                        setBirdLevel(
-                            docSnap
-                                .data()
-                                .birds.cLArray.reduce(
-                                    (acc: number, cur: number) => acc + cur,
-                                    0
-                                )
-                        ); // console.log(birdLevel);
                     }
                 }
             }
@@ -154,19 +146,15 @@ export default function BirdHomeScreen() {
     }, [user, birdLevel, setBirdLevel]);
 
     useEffect(() => {
-        if (birdLevel) {
+        if (userData) {
             setProgressWidth(
-                "w-[" +
-                    Math.round((birdLevel / 11) * 192 + 1).toString() +
-                    "px]"
+                userData.birds.cLArray.reduce(
+                    (acc: number, cur: number) => acc + cur,
+                    0
+                )
             );
-            // console.log(progressWidth);
         }
-    }, [birdLevel, setProgressWidth]);
-
-    useEffect(() => {
-        console.log(progressWidth);
-    }, [progressWidth]);
+    }, [userData, setProgressWidth]);
 
     return (
         <SafeAreaView className=" bg-[#FDD58D] pt-6 h-full ">
@@ -226,10 +214,16 @@ export default function BirdHomeScreen() {
                     source={require("@/assets/images/brain.png")}
                     className="w-6 h-6 mr-2"
                 />
-                <View className="w-48 h-8 bg-green-300 rounded-md ">
+                <View className="flex flex-row w-48 h-8 overflow-hidden bg-green-300 rounded-md">
                     <View
-                        className={` ${progressWidth} h-8 bg-green-600 rounded-md `}
+                        className={` w-4 h-8 bg-green-600 rounded-l-md `}
                     ></View>
+                    {Array.from({ length: progressWidth - 1 }, (_, index) => (
+                        <View
+                            key={index}
+                            className="w-4 h-8 bg-green-600 "
+                        ></View>
+                    ))}
                 </View>
             </View>
             <TouchableOpacity
