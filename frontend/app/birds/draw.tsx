@@ -17,7 +17,6 @@ import { AntDesign } from "@expo/vector-icons";
 import { Svg, Path } from "react-native-svg";
 import { Entypo } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
-import ViewShot from "react-native-view-shot";
 
 export default function BirdFindScreen() {
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
@@ -29,9 +28,6 @@ export default function BirdFindScreen() {
     const [currentPath, setCurrentPath] = useState<string[]>([]);
     const [isClearButtonClicked, setClearButtonClicked] =
         useState<boolean>(false);
-    const viewShotRef = useRef<any>(null);
-    const [doc, setDoc] = useState<any>(null);
-
     const onTouchEnd = () => {
         setPaths([...paths, currentPath.join("")]);
         setCurrentPath([]);
@@ -61,11 +57,11 @@ export default function BirdFindScreen() {
         setCloudText("Good Job, Bird Found!");
     };
 
-    useEffect(() => {
-        if (!user) {
-            router.replace("/");
-        }
-    }, [user]);
+    // useEffect(() => {
+    //     if (!user) {
+    //         router.replace("/");
+    //     }
+    // }, [user]);
 
     const handleSubmitButtonClick = async () => {
         onTouchEnd();
@@ -95,16 +91,6 @@ export default function BirdFindScreen() {
         } catch (error) {
             console.error("Error:", error);
         }
-    };
-
-    const handlePressIn = (text: string, index: number) => {
-        setCloudText(text);
-        setActiveIndex(index);
-    };
-
-    const handlePressOut = () => {
-        setCloudText("");
-        setActiveIndex(null);
     };
 
     return (
@@ -188,47 +174,41 @@ export default function BirdFindScreen() {
                         activeIndex === 4 ? "scale-105" : ""
                     }`}
                 >
-                    <ViewShot
-                        ref={viewShotRef}
-                        options={{ format: "png", quality: 1 }}
+                    <View
+                        className="flex items-center justify-center w-48 rounded-lg bg-slate-100 h-72"
+                        onTouchMove={onTouchMove}
+                        onTouchEnd={onTouchEnd}
                     >
-                        <View
-                            className="flex items-center justify-center w-48 rounded-lg bg-slate-100 h-72"
-                            onTouchMove={onTouchMove}
-                            onTouchEnd={onTouchEnd}
-                        >
-                            <Svg className="w-full h-full">
-                                <Path
-                                    d={paths.join("")}
-                                    stroke={
-                                        isClearButtonClicked
-                                            ? "transparent"
-                                            : "red"
-                                    }
-                                    fill="transparent"
-                                    strokeWidth={10}
-                                    strokeLinejoin="round"
-                                    strokeLinecap="round"
-                                />
-                                {paths.length > 0 &&
-                                    paths.map((item, index) => (
-                                        <Path
-                                            key={`path-${index}`}
-                                            d={currentPath.join("")}
-                                            stroke={
-                                                isClearButtonClicked
-                                                    ? "transparent"
-                                                    : "red"
-                                            }
-                                            fill="transparent"
-                                            strokeWidth={10}
-                                            strokeLinejoin="round"
-                                            strokeLinecap="round"
-                                        />
-                                    ))}
-                            </Svg>
-                        </View>
-                    </ViewShot>
+                        <Svg className="w-full h-full">
+                            <Path
+                                d={paths.join("")}
+                                stroke={
+                                    isClearButtonClicked ? "transparent" : "red"
+                                }
+                                fill="transparent"
+                                strokeWidth={10}
+                                strokeLinejoin="round"
+                                strokeLinecap="round"
+                            />
+                            {paths.length > 0 &&
+                                paths.map((item, index) => (
+                                    <Path
+                                        key={`path-${index}`}
+                                        d={currentPath.join("")}
+                                        stroke={
+                                            isClearButtonClicked
+                                                ? "transparent"
+                                                : "red"
+                                        }
+                                        fill="transparent"
+                                        strokeWidth={10}
+                                        strokeLinejoin="round"
+                                        strokeLinecap="round"
+                                    />
+                                ))}
+                        </Svg>
+                    </View>
+
                     <TouchableOpacity
                         className="absolute z-10 rounded-full bg-transperant bottom-4 left-4 "
                         onPress={handleClearButtonClick}

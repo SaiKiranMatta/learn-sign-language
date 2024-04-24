@@ -10,20 +10,20 @@ import {
     TouchableOpacity,
 } from "react-native";
 import { router } from "expo-router";
+import { Svg, Path } from "react-native-svg";
 import React, { useEffect, useState } from "react";
 import { Text, View } from "@/components/Themed";
 import { db, useAuth } from "@/context/AuthProvider";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Entypo, Octicons } from "@expo/vector-icons";
 import AlphaWordComponent from "@/components/AlphabetComponent";
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function BirdAlphaScreen() {
-    const curLevel = 1;
-    const alphaWord = "BIRDS";
+    const curLevel = 2;
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
-    const [cloudText, setCloudText] = useState<string>("Level 2");
+    const [cloudText, setCloudText] = useState<string>("Learn these signs!");
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [border, setBorder] = useState<string>("");
     const [progressWidth, setProgressWidth] = useState<number>(0);
@@ -31,14 +31,76 @@ export default function BirdAlphaScreen() {
     // Function to handle press on feature pressables
     const [userData, setUserData] = useState<any>(null);
     const [levelsFinishedToday, setLevelsFinishedToday] = useState(0);
+    const [paths, setPaths] = useState<string[]>([]);
+    const [currentPath, setCurrentPath] = useState<string[]>([]);
+    const [isClearButtonClicked, setClearButtonClicked] =
+        useState<boolean>(false);
+    const onTouchEnd = () => {
+        setPaths([...paths, currentPath.join("")]);
+        setCurrentPath([]);
+        setClearButtonClicked(false);
+    };
 
+    const onTouchMove = (event: any) => {
+        const newPath = [...currentPath];
+        const locationX = event.nativeEvent.locationX;
+        const locationY = event.nativeEvent.locationY;
+        const newPoint = `${newPath.length === 0 ? "M" : ""}${locationX.toFixed(
+            0
+        )},${locationY.toFixed(0)} `;
+        newPath.push(newPoint);
+        setCurrentPath(newPath);
+    };
+
+    const handleClearButtonClick = () => {
+        setPaths([]);
+        setCurrentPath([]);
+        setClearButtonClicked(true);
+    };
+    // Function to handle press on feature pressables
+
+    // useEffect(() => {
+    //     if (!user) {
+    //         router.replace("/");
+    //     }
+    // }, [user]);
+
+    const handleSubmitButtonClick = async () => {
+        onTouchEnd();
+        try {
+            const svgData = `<svg width="192" height="224"><rect x="0" y="0" width="100%" height="100%" fill="white" />
+            <path d="${paths.join("")}" stroke="${
+                isClearButtonClicked ? "transparent" : "black"
+            }" fill="transparent" stroke-width="10" strokeLinejoin="round" strokeLinecap="round" /></svg>`;
+
+            const response = await fetch(
+                "http://192.168.29.52:8000/convert-svg-to-png",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ svgData }),
+                }
+            );
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+            } else {
+                console.error("Error:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
     useEffect(() => {
         // Load the count and last update date from AsyncStorage when the component mounts
         loadLevelsFinishedToday();
     }, []);
 
     // useEffect(() => {
-    //     console.log("level2", levelsFinishedToday);
+    //     console.log(levelsFinishedToday);
     // }, [levelsFinishedToday]);
 
     const loadLevelsFinishedToday = async () => {
@@ -171,23 +233,39 @@ export default function BirdAlphaScreen() {
     const handleNextPressIn = async () => {
         // console.log(userData);
         if (levelsFinishedToday < 10 && user) {
-            const newBirdLevel = curLevel + 1;
-            const newBirdLevelArray = [...userData.birds.cLArray];
-            newBirdLevelArray[curLevel - 1] = 1;
-            const newUserData = {
-                ...userData,
-                birds: {
-                    ...userData.birds,
-                    cLArray: newBirdLevelArray,
-                    cL: newBirdLevel,
-                },
-            };
+            if (userData.birds.cLArray[curLevel - 1] === 0) {
+                const newBirdLevel = curLevel + 1;
+                const newBirdLevelArray = [...userData.birds.cLArray];
+                newBirdLevelArray[curLevel - 1] = 1;
+                const newUserData = {
+                    ...userData,
+                    birds: {
+                        ...userData.birds,
+                        cLArray: newBirdLevelArray,
+                        cL: newBirdLevel,
+                    },
+                };
 
-            const docRef = doc(db, "users", user.uid);
-            await setDoc(docRef, newUserData);
-            setUserData(newUserData);
-            incrementLevelsFinished();
-            router.replace("/birds/level2");
+                const docRef = doc(db, "users", user.uid);
+                await setDoc(docRef, newUserData);
+                setUserData(newUserData);
+                incrementLevelsFinished();
+                router.replace("/birds/level2");
+            } else {
+                const newBirdLevel = curLevel + 1;
+                const newUserData = {
+                    ...userData,
+                    birds: {
+                        ...userData.birds,
+                        cL: newBirdLevel,
+                    },
+                };
+
+                const docRef = doc(db, "users", user.uid);
+                await setDoc(docRef, newUserData);
+                setUserData(newUserData);
+                router.replace("/birds/level2");
+            }
         }
     };
 
@@ -276,8 +354,79 @@ export default function BirdAlphaScreen() {
                 <AntDesign name="caretright" size={60} color="#59E659" />
             </TouchableOpacity>
 
-            <View className="absolute flex pl-48 pr-4 pt-10 items-center bg-[#FDD58D] justify-center w-full h-full">
-                <AlphaWordComponent alphaWord={alphaWord} />
+            <View className="absolute flex flex-row pl-64 items-end bg-[#FDD58D] justify-start w-full h-full">
+                <View
+                    className={` ml-8 p-2 rounded-lg bg-[#DBB780] ${
+                        activeIndex === 4 ? "scale-105" : ""
+                    }`}
+                >
+                    <Image
+                        source={require("@/assets/images/Birds/bird-on-tree.jpg")}
+                        className="w-48 h-56 rounded-lg"
+                    />
+                </View>
+
+                <View
+                    className={` ml-8 p-2  rounded-lg  bg-[#DBB780] ${
+                        activeIndex === 4 ? "scale-105" : ""
+                    }`}
+                >
+                    <View
+                        className="flex items-center justify-center w-48 h-56 rounded-lg bg-slate-100"
+                        onTouchMove={onTouchMove}
+                        onTouchEnd={onTouchEnd}
+                    >
+                        <Svg className="w-full h-full">
+                            <Path
+                                d={paths.join("")}
+                                stroke={
+                                    isClearButtonClicked ? "transparent" : "red"
+                                }
+                                fill="transparent"
+                                strokeWidth={10}
+                                strokeLinejoin="round"
+                                strokeLinecap="round"
+                            />
+                            {paths.length > 0 &&
+                                paths.map((item, index) => (
+                                    <Path
+                                        key={`path-${index}`}
+                                        d={currentPath.join("")}
+                                        stroke={
+                                            isClearButtonClicked
+                                                ? "transparent"
+                                                : "red"
+                                        }
+                                        fill="transparent"
+                                        strokeWidth={10}
+                                        strokeLinejoin="round"
+                                        strokeLinecap="round"
+                                    />
+                                ))}
+                        </Svg>
+                    </View>
+
+                    <TouchableOpacity
+                        className="absolute z-10 rounded-full bg-transperant bottom-4 left-4 "
+                        onPress={handleClearButtonClick}
+                    >
+                        <Entypo
+                            name="circle-with-cross"
+                            size={40}
+                            color="red"
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        className="absolute rounded-full bg-transperant bottom-4 right-4 "
+                        onPress={handleSubmitButtonClick}
+                    >
+                        <Octicons
+                            name="check-circle-fill"
+                            size={35}
+                            color="#59E659"
+                        />
+                    </TouchableOpacity>
+                </View>
             </View>
         </SafeAreaView>
     );
