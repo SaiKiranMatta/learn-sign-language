@@ -23,12 +23,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ScreenOrientation from "expo-screen-orientation";
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 
-export default function BirdDrawScreen() {
-    const curLevel = 2;
-    const answer = "B";
+export default function BirdFindScreen() {
+    const curLevel = 6;
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
     const [cloudText, setCloudText] = useState<string>(
-        "Draw the alphabet of this sign!"
+        "Find the Bird on the Tree!"
     );
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [border, setBorder] = useState<string>("");
@@ -72,39 +71,10 @@ export default function BirdDrawScreen() {
     //     }
     // }, [user]);
 
-    const handleSubmitButtonClick = async () => {
-        onTouchEnd();
-        try {
-            const svgData = `<svg width="192" height="224"><rect x="0" y="0" width="100%" height="100%" fill="white" />
-            <path d="${paths.join("")}" stroke="${
-                isClearButtonClicked ? "transparent" : "black"
-            }" fill="transparent" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" /></svg>`;
-
-            const response = await fetch(
-                "http://192.168.29.52:8000/convert-svg-to-png",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ svgData }),
-                }
-            );
-
-            if (response.ok) {
-                const data = await response.json();
-                // console.log(data.text[0]);
-                if (data.text[0] === answer) {
-                    // console.log(data.text[0]);
-                    setIsComplete(true);
-                    setCloudText("Great Job!");
-                }
-            } else {
-                console.error("Error:", response.statusText);
-            }
-        } catch (error) {
-            console.error("Error:", error);
-        }
+    const handleObjectPress = () => {
+        setIsComplete(true);
+        setBorder("border border-2 border-green-600");
+        setCloudText("Good Job, Bird Found!");
     };
     useEffect(() => {
         // Load the count and last update date from AsyncStorage when the component mounts
@@ -249,14 +219,14 @@ export default function BirdDrawScreen() {
                 const newBirdLevel = curLevel + 1;
                 const newBirdLevelArray = [...userData.birds.cLArray];
                 newBirdLevelArray[curLevel - 1] = 1;
-                const sC = userData.birds.sC + 1;
+                const fC = userData.birds.fC + 1;
                 const newUserData = {
                     ...userData,
                     birds: {
                         ...userData.birds,
                         cLArray: newBirdLevelArray,
                         cL: newBirdLevel,
-                        sC: sC,
+                        fC: fC,
                     },
                 };
 
@@ -264,7 +234,7 @@ export default function BirdDrawScreen() {
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
                 incrementLevelsFinished();
-                router.replace("/birds/level3");
+                router.replace("/birds/level7");
             } else {
                 const newBirdLevel = curLevel + 1;
                 const newUserData = {
@@ -278,7 +248,7 @@ export default function BirdDrawScreen() {
                 const docRef = doc(db, "users", user.uid);
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
-                router.replace("/birds/level3");
+                router.replace("/birds/level7");
             }
         }
     };
@@ -324,7 +294,7 @@ export default function BirdDrawScreen() {
             )}
             <View className="absolute z-50 flex flex-row items-center bg-transparent top-10 left-4">
                 <TouchableOpacity
-                    onPress={() => router.replace("/birds/level1")}
+                    onPress={() => router.replace("/birds/level5")}
                     className=""
                 >
                     <AntDesign name="caretleft" size={30} color="#FB923C" />
@@ -368,78 +338,20 @@ export default function BirdDrawScreen() {
                 <AntDesign name="caretright" size={60} color="#59E659" />
             </TouchableOpacity>
 
-            <View className="absolute flex flex-row pl-64 items-end bg-[#FDD58D] justify-start w-full h-full">
+            <View className="absolute flex pl-48 items-center bg-[#FDD58D] justify-end w-full h-full">
                 <View
-                    className={` ml-8 p-2 rounded-lg bg-[#DBB780] ${
+                    className={`  p-2 rounded-lg bg-[#DBB780] ${
                         activeIndex === 4 ? "scale-105" : ""
                     }`}
                 >
                     <Image
-                        source={require("@/assets/images/alphabet/b.jpeg")}
-                        className="w-48 h-56 rounded-lg"
+                        source={require("@/assets/images/Birds/find-bird.jpg")}
+                        className="h-56 rounded-lg w-96"
                     />
-                </View>
-
-                <View
-                    className={` ml-8 p-2  rounded-lg  bg-[#DBB780] ${
-                        activeIndex === 4 ? "scale-105" : ""
-                    }`}
-                >
-                    <View
-                        className="flex items-center justify-center w-48 h-56 rounded-lg bg-slate-100"
-                        onTouchMove={onTouchMove}
-                        onTouchEnd={onTouchEnd}
-                    >
-                        <Svg className="w-full h-full">
-                            <Path
-                                d={paths.join("")}
-                                stroke={
-                                    isClearButtonClicked ? "transparent" : "red"
-                                }
-                                fill="transparent"
-                                strokeWidth={10}
-                                strokeLinejoin="round"
-                                strokeLinecap="round"
-                            />
-                            {paths.length > 0 &&
-                                paths.map((item, index) => (
-                                    <Path
-                                        key={`path-${index}`}
-                                        d={currentPath.join("")}
-                                        stroke={
-                                            isClearButtonClicked
-                                                ? "transparent"
-                                                : "red"
-                                        }
-                                        fill="transparent"
-                                        strokeWidth={10}
-                                        strokeLinejoin="round"
-                                        strokeLinecap="round"
-                                    />
-                                ))}
-                        </Svg>
-                    </View>
-
-                    <TouchableOpacity
-                        className="absolute z-10 rounded-full bg-transperant bottom-4 left-4 "
-                        onPress={handleClearButtonClick}
-                    >
-                        <Entypo
-                            name="circle-with-cross"
-                            size={40}
-                            color="red"
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        className="absolute rounded-full bg-transperant bottom-4 right-4 "
-                        onPress={handleSubmitButtonClick}
-                    >
-                        <Octicons
-                            name="check-circle-fill"
-                            size={35}
-                            color="#59E659"
-                        />
-                    </TouchableOpacity>
+                    <Pressable
+                        onPress={handleObjectPress}
+                        className={`absolute w-16 h-14 bg-transparent ${border}  left-10 top-6`}
+                    ></Pressable>
                 </View>
             </View>
         </SafeAreaView>

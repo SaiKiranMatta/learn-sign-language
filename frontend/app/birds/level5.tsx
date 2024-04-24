@@ -191,7 +191,7 @@ export default function BirdAlphaScreen() {
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
                 incrementLevelsFinished();
-                router.replace("/birds/level2");
+                router.replace("/birds/level6");
             } else {
                 const newBirdLevel = curLevel + 1;
                 const newUserData = {
@@ -205,7 +205,7 @@ export default function BirdAlphaScreen() {
                 const docRef = doc(db, "users", user.uid);
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
-                router.replace("/birds/level2");
+                router.replace("/birds/level6");
             }
         }
     };
