@@ -4,6 +4,7 @@ from reportlab.graphics import renderPM
 import os
 from typing import Dict
 from cairosvg import svg2png
+import easyocr
 
 app = FastAPI()
 
@@ -11,13 +12,23 @@ UPLOAD_DIR = "uploads"
 if not os.path.exists(UPLOAD_DIR):
     os.makedirs(UPLOAD_DIR)
 
+
+def ocr_png_image():
+    # Create an OCR reader object
+    reader = easyocr.Reader(['en'])  # Specify language(s) here, e.g., ['en', 'de', 'fr']
+
+    # Perform OCR on the image
+    result = reader.readtext("./uploads/image.png")
+    return result
 @app.post("/convert-svg-to-png/")
 async def convert_svg_to_png(data: Dict[str, str]):
     try:
         svg_data = data.get("svgData")
         png_file_path = os.path.join(UPLOAD_DIR, "image.png")
         svg2png(bytestring=svg_data, write_to=png_file_path)
-        return JSONResponse(content={"message": "SVG successfully converted to PNG"}, status_code=200)        
+        result_text = ocr_png_image()
+        extracted_text = [detection[1] for detection in result_text]
+        return JSONResponse(content={"text": extracted_text}, status_code=200)        
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error converting SVG to PNG: {str(e)}")
 
@@ -288,22 +299,3 @@ def get_live_labels():
     live_labels.clear()
     return JSONResponse({"labels" : labels})
 
-
-import easyocr
-
-def ocr_png_image(image_path):
-    # Create an OCR reader object
-    reader = easyocr.Reader(['en'])  # Specify language(s) here, e.g., ['en', 'de', 'fr']
-
-    # Perform OCR on the image
-    result = reader.readtext(image_path)
-    return result
-
-# Path to your PNG image
-image_path = '/content/w.png'
-
-# Perform OCR on the image
-result_text = ocr_png_image(image_path)
-print("OCR Result:")
-for detection in result_text:
-    print(detection[1])  # detection[1] contains the recognized text
