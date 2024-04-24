@@ -24,7 +24,7 @@ import * as ScreenOrientation from "expo-screen-orientation";
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 
 export default function BirdDrawScreen() {
-    const curLevel = 2;
+    const curLevel = 7;
     const answer = "C";
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
     const [cloudText, setCloudText] = useState<string>(
