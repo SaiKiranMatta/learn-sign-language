@@ -8,11 +8,6 @@ import easyocr
 
 app = FastAPI()
 
-UPLOAD_DIR = "uploads"
-if not os.path.exists(UPLOAD_DIR):
-    os.makedirs(UPLOAD_DIR)
-
-
 def ocr_png_image():
     # Create an OCR reader object
     reader = easyocr.Reader(['en'])  # Specify language(s) here, e.g., ['en', 'de', 'fr']
@@ -29,6 +24,20 @@ async def convert_svg_to_png(data: Dict[str, str]):
         result_text = ocr_png_image()
         extracted_text = [detection[1] for detection in result_text]
         return JSONResponse(content={"text": extracted_text}, status_code=200)        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error converting SVG to PNG: {str(e)}")
+
+UPLOAD_DIR = "uploads"
+if not os.path.exists(UPLOAD_DIR):
+    os.makedirs(UPLOAD_DIR)
+
+@app.post("/convert-svg-to-png/")
+async def convert_svg_to_png(data: Dict[str, str]):
+    try:
+        svg_data = data.get("svgData")
+        png_file_path = os.path.join(UPLOAD_DIR, "image.png")
+        svg2png(bytestring=svg_data, write_to=png_file_path)
+        return JSONResponse(content={"message": "SVG successfully converted to PNG"}, status_code=200)        
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error converting SVG to PNG: {str(e)}")
 
@@ -54,7 +63,7 @@ import numpy as np
 model_dict = pickle.load(open('./model.p', 'rb'))
 model = model_dict['model']
 
-cap = cv2.VideoCapture(0)
+# cap = cv2.VideoCapture(0)
 
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
@@ -298,4 +307,4 @@ def get_live_labels():
     labels = list(live_labels)
     live_labels.clear()
     return JSONResponse({"labels" : labels})
-
+# detection[1] contains the recognized text

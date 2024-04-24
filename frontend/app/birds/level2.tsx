@@ -86,7 +86,7 @@ export default function BirdAlphaScreen() {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log(data);
+                console.log(data.text);
             } else {
                 console.error("Error:", response.statusText);
             }
