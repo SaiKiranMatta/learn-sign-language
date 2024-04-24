@@ -244,8 +244,8 @@ export default function BirdAlphaScreen() {
 
     const handleNextPressIn = async () => {
         // console.log(userData);
-        if (levelsFinishedToday < 10 && user && isComplete) {
-            if (userData.birds.cLArray[curLevel - 1] === 0) {
+        if (levelsFinishedToday < 10 && user) {
+            if (userData.birds.cLArray[curLevel - 1] === 0 && isComplete) {
                 const newBirdLevel = curLevel + 1;
                 const newBirdLevelArray = [...userData.birds.cLArray];
                 newBirdLevelArray[curLevel - 1] = 1;
@@ -256,7 +256,7 @@ export default function BirdAlphaScreen() {
                         ...userData.birds,
                         cLArray: newBirdLevelArray,
                         cL: newBirdLevel,
-                        sC,
+                        sC: sC,
                     },
                 };
 

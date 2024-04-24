@@ -38,7 +38,7 @@ export default function BirdHomeScreen() {
     };
 
     const handleNextPressIn = () => {
-        if (levelsFinishedToday < 10) {
+        if (levelsFinishedToday < 100 && userData) {
             const birdLevel = userData.birds.cL;
             incrementLevelsFinished();
             switch (birdLevel) {
@@ -80,7 +80,7 @@ export default function BirdHomeScreen() {
                     break;
             }
         } else {
-            setCloudText("Max Levels for Today Reached");
+            setCloudText(`Max Levels ${levelsFinishedToday} for Today Reached`);
         }
     };
 
