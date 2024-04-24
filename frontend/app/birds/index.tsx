@@ -20,10 +20,10 @@ export default function BirdHomeScreen() {
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
     const [cloudText, setCloudText] = useState<string>("Birds");
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
-    const [progressWidth, setProgressWidth] = useState<number>(6);
-    const [birdLevel, setBirdLevel] = useState<string | null>();
+    const [progressWidth, setProgressWidth] = useState<string>("w-[1px]");
+    const [birdLevel, setBirdLevel] = useState<number | null>();
     // Function to handle press on feature pressables
-
+    const [userData, setUserData] = useState<any>(null);
     const handlePressIn = (text: string, index: number) => {
         setCloudText(text);
         setActiveIndex(index);
@@ -32,6 +32,49 @@ export default function BirdHomeScreen() {
     const handlePressOut = () => {
         setCloudText("");
         setActiveIndex(null);
+    };
+
+    const handleNextPressIn = () => {
+        const birdLevel = userData.birds.cL;
+
+        switch (birdLevel) {
+            case 1:
+                router.replace("/birds/level1");
+                break;
+            case 2:
+                router.replace("/birds/level2");
+                break;
+            case 3:
+                router.replace("/birds/level3");
+                break;
+            case 4:
+                router.replace("/birds/level4");
+                break;
+            case 5:
+                router.replace("/birds/level5");
+                break;
+            case 6:
+                router.replace("/birds/level6");
+                break;
+            case 7:
+                router.replace("/birds/level7");
+                break;
+            case 8:
+                router.replace("/birds/level8");
+                break;
+            case 9:
+                router.replace("/birds/level9");
+                break;
+            case 10:
+                router.replace("/birds/level10");
+                break;
+            case 11:
+                router.replace("/birds/level11");
+                break;
+            default:
+                router.replace("/birds/level1");
+                break;
+        }
     };
 
     useEffect(() => {
@@ -48,12 +91,42 @@ export default function BirdHomeScreen() {
                             const docRef = await setDoc(
                                 doc(usersRef, user.uid),
                                 {
-                                    birds: 1,
-                                    animals: 1,
-                                    bodyparts: 1,
-                                    everyDayObjects: 1,
-                                    shapes: 1,
-                                    sports: 1,
+                                    birds: {
+                                        cL: 0,
+                                        cLArray: Array(11).fill(0),
+                                        fC: 0,
+                                        sC: 0,
+                                    },
+                                    animals: {
+                                        cL: 0,
+                                        cLArray: Array(11).fill(0),
+                                        fC: 0,
+                                        sC: 0,
+                                    },
+                                    bodyparts: {
+                                        cL: 0,
+                                        cLArray: Array(11).fill(0),
+                                        fC: 0,
+                                        sC: 0,
+                                    },
+                                    everyDayObjects: {
+                                        cL: 0,
+                                        cLArray: Array(11).fill(0),
+                                        fC: 0,
+                                        sC: 0,
+                                    },
+                                    shapes: {
+                                        cL: 0,
+                                        cLArray: Array(11).fill(0),
+                                        fC: 0,
+                                        sC: 0,
+                                    },
+                                    sports: {
+                                        cL: 0,
+                                        cLArray: Array(11).fill(0),
+                                        fC: 0,
+                                        sC: 0,
+                                    },
                                 }
                             );
 
@@ -63,8 +136,15 @@ export default function BirdHomeScreen() {
                         }
                     } else {
                         // console.log("Document data:", docSnap.data());
-                        setBirdLevel(docSnap.data().birds);
-                        // console.log(birdLevel);
+                        setUserData(docSnap.data());
+                        setBirdLevel(
+                            docSnap
+                                .data()
+                                .birds.cLArray.reduce(
+                                    (acc: number, cur: number) => acc + cur,
+                                    0
+                                )
+                        ); // console.log(birdLevel);
                     }
                 }
             }
@@ -72,6 +152,21 @@ export default function BirdHomeScreen() {
 
         addUserDocument();
     }, [user, birdLevel, setBirdLevel]);
+
+    useEffect(() => {
+        if (birdLevel) {
+            setProgressWidth(
+                "w-[" +
+                    Math.round((birdLevel / 11) * 192 + 1).toString() +
+                    "px]"
+            );
+            // console.log(progressWidth);
+        }
+    }, [birdLevel, setProgressWidth]);
+
+    useEffect(() => {
+        console.log(progressWidth);
+    }, [progressWidth]);
 
     return (
         <SafeAreaView className=" bg-[#FDD58D] pt-6 h-full ">
@@ -131,18 +226,18 @@ export default function BirdHomeScreen() {
                     source={require("@/assets/images/brain.png")}
                     className="w-6 h-6 mr-2"
                 />
-                <View className="flex justify-start w-48 h-8 bg-green-300 rounded-md">
+                <View className="w-48 h-8 bg-green-300 rounded-md ">
                     <View
-                        className={`w-${progressWidth} h-8 bg-green-600 rounded-md`}
+                        className={` ${progressWidth} h-8 bg-green-600 rounded-md `}
                     ></View>
                 </View>
             </View>
-            <Pressable
-                onPress={() => router.replace("/birds/find")}
+            <TouchableOpacity
+                onPress={handleNextPressIn}
                 className="absolute z-50 bg-transparent right-4 top-1/2 "
             >
                 <AntDesign name="caretright" size={60} color="#59E659" />
-            </Pressable>
+            </TouchableOpacity>
 
             <View className="absolute flex items-center bg-[#FDD58D] justify-center w-full h-full">
                 <View
