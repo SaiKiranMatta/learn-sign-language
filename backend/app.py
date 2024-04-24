@@ -212,7 +212,7 @@ class VideoTransformTrack(MediaStreamTrack):
                 print("Predicted character:", predicted_character)
                 live_labels.add(predicted_character)
             # cv2.imshow('frame', frame)
-            key = cv2.waitKey(1)
+            # key = cv2.waitKey(1)
             # if key == 27:  # Escape key
             #     break
         except Exception as e:
