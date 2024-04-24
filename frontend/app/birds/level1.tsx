@@ -18,7 +18,9 @@ import AlphaWordComponent from "@/components/AlphabetComponent";
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function BirdAlphaScreen() {
+    const curLevel = 1;
     const alphaWord = "BIRDS";
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
     const [cloudText, setCloudText] = useState<string>("Learn these signs!");
@@ -28,7 +30,59 @@ export default function BirdAlphaScreen() {
     const [birdLevel, setBirdLevel] = useState<number | null>();
     // Function to handle press on feature pressables
     const [userData, setUserData] = useState<any>(null);
+    const [levelsFinishedToday, setLevelsFinishedToday] = useState(0);
 
+    useEffect(() => {
+        // Load the count and last update date from AsyncStorage when the component mounts
+        loadLevelsFinishedToday();
+    }, []);
+
+    // useEffect(() => {
+    //     console.log(levelsFinishedToday);
+    // }, [levelsFinishedToday]);
+
+    const loadLevelsFinishedToday = async () => {
+        try {
+            const savedData = await AsyncStorage.multiGet([
+                "levelsFinishedToday",
+                "lastUpdateDate",
+            ]);
+            if (savedData !== null) {
+                const count =
+                    savedData[0][1] !== null
+                        ? parseInt(savedData[0][1], 10) || 0
+                        : 0;
+                const lastUpdateDate = savedData[1][1];
+                const currentDate = new Date().toISOString().split("T")[0]; // Get current date
+
+                if (lastUpdateDate === currentDate) {
+                    // If the last update date is today, load the count
+                    setLevelsFinishedToday(count);
+                } else {
+                    // If the last update date is not today, reset the count
+                    setLevelsFinishedToday(0);
+                    await AsyncStorage.setItem("levelsFinishedToday", "0");
+                    await AsyncStorage.setItem("lastUpdateDate", currentDate);
+                }
+            }
+        } catch (error) {
+            console.error("Error loading levels finished:", error);
+        }
+    };
+
+    const incrementLevelsFinished = async () => {
+        try {
+            const updatedCount = levelsFinishedToday + 1;
+            await AsyncStorage.setItem(
+                "levelsFinishedToday",
+                updatedCount.toString()
+            );
+            setLevelsFinishedToday(updatedCount);
+            // Alert.alert("Level finished!");
+        } catch (error) {
+            console.error("Error incrementing levels finished:", error);
+        }
+    };
     useEffect(() => {
         if (!user) {
             router.replace("/");
@@ -114,6 +168,45 @@ export default function BirdAlphaScreen() {
         }
     }, [userData, setProgressWidth]);
 
+    const handleNextPressIn = async () => {
+        // console.log(userData);
+        if (levelsFinishedToday < 10 && user) {
+            if (userData.birds.cLArray[curLevel - 1] === 0) {
+                const newBirdLevel = curLevel + 1;
+                const newBirdLevelArray = [...userData.birds.cLArray];
+                newBirdLevelArray[curLevel - 1] = 1;
+                const newUserData = {
+                    ...userData,
+                    birds: {
+                        ...userData.birds,
+                        cLArray: newBirdLevelArray,
+                        cL: newBirdLevel,
+                    },
+                };
+
+                const docRef = doc(db, "users", user.uid);
+                await setDoc(docRef, newUserData);
+                setUserData(newUserData);
+                incrementLevelsFinished();
+                router.replace("/birds/level2");
+            } else {
+                const newBirdLevel = curLevel + 1;
+                const newUserData = {
+                    ...userData,
+                    birds: {
+                        ...userData.birds,
+                        cL: newBirdLevel,
+                    },
+                };
+
+                const docRef = doc(db, "users", user.uid);
+                await setDoc(docRef, newUserData);
+                setUserData(newUserData);
+                router.replace("/birds/level2");
+            }
+        }
+    };
+
     return (
         <SafeAreaView className=" bg-[#FDD58D] pt-6 h-full ">
             <Image
@@ -193,7 +286,7 @@ export default function BirdAlphaScreen() {
             </View>
 
             <TouchableOpacity
-                onPress={() => router.replace("/birds/draw")}
+                onPress={handleNextPressIn}
                 className="absolute z-50 bg-transparent right-4 top-1/2 "
             >
                 <AntDesign name="caretright" size={60} color="#59E659" />

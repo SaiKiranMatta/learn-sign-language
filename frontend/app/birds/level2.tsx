@@ -14,79 +14,32 @@ import React, { useEffect, useState } from "react";
 import { Text, View } from "@/components/Themed";
 import { db, useAuth } from "@/context/AuthProvider";
 import { AntDesign } from "@expo/vector-icons";
-import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
+import AlphaWordComponent from "@/components/AlphabetComponent";
+import { collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { FontAwesome } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-export default function BirdHomeScreen() {
-    const [levelsFinishedToday, setLevelsFinishedToday] = useState(0);
+export default function BirdAlphaScreen() {
+    const curLevel = 1;
+    const alphaWord = "BIRDS";
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
-    const [cloudText, setCloudText] = useState<string>("Birds");
+    const [cloudText, setCloudText] = useState<string>("Level 2");
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
+    const [border, setBorder] = useState<string>("");
     const [progressWidth, setProgressWidth] = useState<number>(0);
     const [birdLevel, setBirdLevel] = useState<number | null>();
     // Function to handle press on feature pressables
     const [userData, setUserData] = useState<any>(null);
-    const handlePressIn = (text: string, index: number) => {
-        setCloudText(text);
-        setActiveIndex(index);
-    };
-
-    const handlePressOut = () => {
-        setCloudText("");
-        setActiveIndex(null);
-    };
-
-    const handleNextPressIn = () => {
-        if (levelsFinishedToday < 10) {
-            const birdLevel = userData.birds.cL;
-            incrementLevelsFinished();
-            switch (birdLevel) {
-                case 1:
-                    router.replace("/birds/level1");
-                    break;
-                case 2:
-                    router.replace("/birds/level2");
-                    break;
-                case 3:
-                    router.replace("/birds/level3");
-                    break;
-                case 4:
-                    router.replace("/birds/level4");
-                    break;
-                case 5:
-                    router.replace("/birds/level5");
-                    break;
-                case 6:
-                    router.replace("/birds/level6");
-                    break;
-                case 7:
-                    router.replace("/birds/level7");
-                    break;
-                case 8:
-                    router.replace("/birds/level8");
-                    break;
-                case 9:
-                    router.replace("/birds/level9");
-                    break;
-                case 10:
-                    router.replace("/birds/level10");
-                    break;
-                case 11:
-                    router.replace("/birds/level11");
-                    break;
-                default:
-                    router.replace("/birds/level1");
-                    break;
-            }
-        } else {
-            setCloudText("Max Levels for Today Reached");
-        }
-    };
+    const [levelsFinishedToday, setLevelsFinishedToday] = useState(0);
 
     useEffect(() => {
         // Load the count and last update date from AsyncStorage when the component mounts
         loadLevelsFinishedToday();
     }, []);
+
+    // useEffect(() => {
+    //     console.log("level2", levelsFinishedToday);
+    // }, [levelsFinishedToday]);
 
     const loadLevelsFinishedToday = async () => {
         try {
@@ -119,7 +72,7 @@ export default function BirdHomeScreen() {
 
     const incrementLevelsFinished = async () => {
         try {
-            const updatedCount = levelsFinishedToday + 0;
+            const updatedCount = levelsFinishedToday + 1;
             await AsyncStorage.setItem(
                 "levelsFinishedToday",
                 updatedCount.toString()
@@ -130,6 +83,11 @@ export default function BirdHomeScreen() {
             console.error("Error incrementing levels finished:", error);
         }
     };
+    useEffect(() => {
+        if (!user) {
+            router.replace("/");
+        }
+    }, [user]);
 
     useEffect(() => {
         const addUserDocument = async () => {
@@ -210,6 +168,29 @@ export default function BirdHomeScreen() {
         }
     }, [userData, setProgressWidth]);
 
+    const handleNextPressIn = async () => {
+        // console.log(userData);
+        if (levelsFinishedToday < 10 && user) {
+            const newBirdLevel = curLevel + 1;
+            const newBirdLevelArray = [...userData.birds.cLArray];
+            newBirdLevelArray[curLevel - 1] = 1;
+            const newUserData = {
+                ...userData,
+                birds: {
+                    ...userData.birds,
+                    cLArray: newBirdLevelArray,
+                    cL: newBirdLevel,
+                },
+            };
+
+            const docRef = doc(db, "users", user.uid);
+            await setDoc(docRef, newUserData);
+            setUserData(newUserData);
+            incrementLevelsFinished();
+            router.replace("/birds/level2");
+        }
+    };
+
     return (
         <SafeAreaView className=" bg-[#FDD58D] pt-6 h-full ">
             <Image
@@ -221,7 +202,7 @@ export default function BirdHomeScreen() {
                     source={require("@/assets/images/talkingcloud.png")}
                     className="absolute left-0 z-50 w-56 bottom-28 h-36"
                 >
-                    <Text className="pt-10 pb-12 text-2xl text-center px-7">
+                    <Text className="pt-10 pb-12 text-xl text-center text-green-600 px-7">
                         {cloudText}
                     </Text>
                 </ImageBackground>
@@ -231,7 +212,7 @@ export default function BirdHomeScreen() {
                     onPress={() => {
                         router.push("/login");
                     }}
-                    className="absolute z-40 w-24 px-4 py-2 bg-orange-400 shadow-lg top-10 left-6 rounded-3xl"
+                    className="absolute z-40 w-24 px-4 py-2 bg-orange-400 shadow-lg top-7 right-6 rounded-3xl"
                 >
                     <Text className="text-lg text-center text-white">
                         Login
@@ -242,44 +223,52 @@ export default function BirdHomeScreen() {
                     onPress={() => {
                         signOut();
                     }}
-                    className="absolute z-40 w-24 px-4 py-2 bg-orange-400 shadow-lg top-10 left-6 rounded-3xl"
+                    className="absolute z-40 w-24 px-4 py-2 bg-orange-400 shadow-lg top-7 right-6 rounded-3xl"
                 >
                     <Text className="text-lg text-center text-white">
                         Logout
                     </Text>
                 </TouchableOpacity>
             )}
-            <View className="flex flex-row w-full h-full bg-[#DBB780]">
-                <Image
-                    source={require("@/assets/images/transperant.png")}
-                    className="bottom-0 left-0 z-0 h-1 w-96"
-                />
-                <Image
-                    source={require("@/assets/images/transperant.png")}
-                    className="bottom-0 left-0 z-0 h-1 w-96"
-                />
-                <Image
-                    source={require("@/assets/images/transperant.png")}
-                    className="bottom-0 left-0 z-0 w-32 h-1"
-                />
-            </View>
-            <View className="absolute z-50 flex flex-row items-center p-2 rounded-md top-10 right-4">
-                <Image
-                    source={require("@/assets/images/brain.png")}
-                    className="w-6 h-6 mr-2"
-                />
-                <View className="flex flex-row w-48 h-8 overflow-hidden bg-green-300 rounded-md">
-                    <View
-                        className={` w-4 h-8 bg-green-600 rounded-l-md `}
-                    ></View>
-                    {Array.from({ length: progressWidth - 1 }, (_, index) => (
+            <View className="absolute z-50 flex flex-row items-center bg-transparent top-10 left-4">
+                <TouchableOpacity
+                    onPress={() => router.replace("/birds/")}
+                    className=""
+                >
+                    <AntDesign name="caretleft" size={30} color="#FB923C" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => router.replace("/")}
+                    className=""
+                >
+                    <MaterialCommunityIcons
+                        name="home-circle-outline"
+                        size={45}
+                        color="#FB923C"
+                    />
+                </TouchableOpacity>
+                <View className="flex flex-row items-center p-2 ml-2 rounded-md">
+                    <Image
+                        source={require("@/assets/images/brain.png")}
+                        className="w-6 h-6 mr-2"
+                    />
+                    <View className="flex flex-row w-48 h-8 overflow-hidden bg-green-300 rounded-md">
                         <View
-                            key={index}
-                            className="w-4 h-8 bg-green-600 "
+                            className={` w-4 h-8 bg-green-600 rounded-l-md `}
                         ></View>
-                    ))}
+                        {Array.from(
+                            { length: progressWidth - 1 },
+                            (_, index) => (
+                                <View
+                                    key={index}
+                                    className="w-4 h-8 bg-green-600 "
+                                ></View>
+                            )
+                        )}
+                    </View>
                 </View>
             </View>
+
             <TouchableOpacity
                 onPress={handleNextPressIn}
                 className="absolute z-50 bg-transparent right-4 top-1/2 "
@@ -287,17 +276,8 @@ export default function BirdHomeScreen() {
                 <AntDesign name="caretright" size={60} color="#59E659" />
             </TouchableOpacity>
 
-            <View className="absolute flex items-center bg-[#FDD58D] justify-center w-full h-full">
-                <View
-                    className={`rounded-full  p-8 bg-[#DBB780] ${
-                        activeIndex === 4 ? "scale-105" : ""
-                    }`}
-                >
-                    <Image
-                        source={require("@/assets/images/bird.png")}
-                        className="w-36 h-36 "
-                    />
-                </View>
+            <View className="absolute flex pl-48 pr-4 pt-10 items-center bg-[#FDD58D] justify-center w-full h-full">
+                <AlphaWordComponent alphaWord={alphaWord} />
             </View>
         </SafeAreaView>
     );
