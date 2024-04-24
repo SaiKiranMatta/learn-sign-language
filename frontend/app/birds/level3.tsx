@@ -294,7 +294,7 @@ export default function BirdAlphaScreen() {
             )}
             <View className="absolute z-50 flex flex-row items-center bg-transparent top-10 left-4">
                 <TouchableOpacity
-                    onPress={() => router.replace("/birds/level1")}
+                    onPress={() => router.replace("/birds/level2")}
                     className=""
                 >
                     <AntDesign name="caretleft" size={30} color="#FB923C" />
