@@ -19,6 +19,9 @@ import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ScreenOrientation from "expo-screen-orientation";
+ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+
 export default function BirdAlphaScreen() {
     const curLevel = 1;
     const alphaWord = "BIRDS";

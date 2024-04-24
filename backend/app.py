@@ -23,6 +23,7 @@ async def convert_svg_to_png(data: Dict[str, str]):
         svg2png(bytestring=svg_data, write_to=png_file_path)
         result_text = ocr_png_image()
         extracted_text = [detection[1] for detection in result_text]
+        print(extracted_text)
         return JSONResponse(content={"text": extracted_text}, status_code=200)        
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error converting SVG to PNG: {str(e)}")

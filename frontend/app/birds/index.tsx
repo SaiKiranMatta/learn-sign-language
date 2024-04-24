@@ -16,7 +16,8 @@ import { db, useAuth } from "@/context/AuthProvider";
 import { AntDesign } from "@expo/vector-icons";
 import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import * as ScreenOrientation from "expo-screen-orientation";
+ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 export default function BirdHomeScreen() {
     const [levelsFinishedToday, setLevelsFinishedToday] = useState(0);
     const { user, signOut } = useAuth(); // Get user from the AuthProvider

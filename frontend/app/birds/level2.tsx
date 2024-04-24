@@ -20,10 +20,16 @@ import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ScreenOrientation from "expo-screen-orientation";
+ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+
 export default function BirdAlphaScreen() {
     const curLevel = 2;
+    const answer = "B";
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
-    const [cloudText, setCloudText] = useState<string>("Learn these signs!");
+    const [cloudText, setCloudText] = useState<string>(
+        "Draw the alphabet of this sign!"
+    );
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [border, setBorder] = useState<string>("");
     const [progressWidth, setProgressWidth] = useState<number>(0);
@@ -33,6 +39,7 @@ export default function BirdAlphaScreen() {
     const [levelsFinishedToday, setLevelsFinishedToday] = useState(0);
     const [paths, setPaths] = useState<string[]>([]);
     const [currentPath, setCurrentPath] = useState<string[]>([]);
+    const [isComplete, setIsComplete] = useState<boolean>(false);
     const [isClearButtonClicked, setClearButtonClicked] =
         useState<boolean>(false);
     const onTouchEnd = () => {
@@ -71,7 +78,7 @@ export default function BirdAlphaScreen() {
             const svgData = `<svg width="192" height="224"><rect x="0" y="0" width="100%" height="100%" fill="white" />
             <path d="${paths.join("")}" stroke="${
                 isClearButtonClicked ? "transparent" : "black"
-            }" fill="transparent" stroke-width="10" strokeLinejoin="round" strokeLinecap="round" /></svg>`;
+            }" fill="transparent" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" /></svg>`;
 
             const response = await fetch(
                 "http://192.168.29.52:8000/convert-svg-to-png",
@@ -86,7 +93,12 @@ export default function BirdAlphaScreen() {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log(data.text);
+                // console.log(data.text[0]);
+                if (data.text[0] === answer) {
+                    // console.log(data.text[0]);
+                    setIsComplete(true);
+                    setCloudText("Great Job!");
+                }
             } else {
                 console.error("Error:", response.statusText);
             }
@@ -232,17 +244,19 @@ export default function BirdAlphaScreen() {
 
     const handleNextPressIn = async () => {
         // console.log(userData);
-        if (levelsFinishedToday < 10 && user) {
+        if (levelsFinishedToday < 10 && user && isComplete) {
             if (userData.birds.cLArray[curLevel - 1] === 0) {
                 const newBirdLevel = curLevel + 1;
                 const newBirdLevelArray = [...userData.birds.cLArray];
                 newBirdLevelArray[curLevel - 1] = 1;
+                const sC = userData.birds.sC + 1;
                 const newUserData = {
                     ...userData,
                     birds: {
                         ...userData.birds,
                         cLArray: newBirdLevelArray,
                         cL: newBirdLevel,
+                        sC,
                     },
                 };
 
@@ -250,7 +264,7 @@ export default function BirdAlphaScreen() {
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
                 incrementLevelsFinished();
-                router.replace("/birds/level2");
+                router.replace("/birds/level3");
             } else {
                 const newBirdLevel = curLevel + 1;
                 const newUserData = {
@@ -264,7 +278,7 @@ export default function BirdAlphaScreen() {
                 const docRef = doc(db, "users", user.uid);
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
-                router.replace("/birds/level2");
+                router.replace("/birds/level3");
             }
         }
     };
@@ -310,7 +324,7 @@ export default function BirdAlphaScreen() {
             )}
             <View className="absolute z-50 flex flex-row items-center bg-transparent top-10 left-4">
                 <TouchableOpacity
-                    onPress={() => router.replace("/birds/")}
+                    onPress={() => router.replace("/birds/level1")}
                     className=""
                 >
                     <AntDesign name="caretleft" size={30} color="#FB923C" />
@@ -361,7 +375,7 @@ export default function BirdAlphaScreen() {
                     }`}
                 >
                     <Image
-                        source={require("@/assets/images/Birds/bird-on-tree.jpg")}
+                        source={require("@/assets/images/alphabet/b.jpeg")}
                         className="w-48 h-56 rounded-lg"
                     />
                 </View>
