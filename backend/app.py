@@ -287,3 +287,23 @@ def get_live_labels():
     labels = list(live_labels)
     live_labels.clear()
     return JSONResponse({"labels" : labels})
+
+
+import easyocr
+
+def ocr_png_image(image_path):
+    # Create an OCR reader object
+    reader = easyocr.Reader(['en'])  # Specify language(s) here, e.g., ['en', 'de', 'fr']
+
+    # Perform OCR on the image
+    result = reader.readtext(image_path)
+    return result
+
+# Path to your PNG image
+image_path = '/content/w.png'
+
+# Perform OCR on the image
+result_text = ocr_png_image(image_path)
+print("OCR Result:")
+for detection in result_text:
+    print(detection[1])  # detection[1] contains the recognized text
