@@ -92,37 +92,37 @@ export default function BirdHomeScreen() {
                                 doc(usersRef, user.uid),
                                 {
                                     birds: {
-                                        cL: 0,
+                                        cl: 1,
                                         cLArray: Array(11).fill(0),
                                         fC: 0,
                                         sC: 0,
                                     },
                                     animals: {
-                                        cL: 0,
+                                        cl: 1,
                                         cLArray: Array(11).fill(0),
                                         fC: 0,
                                         sC: 0,
                                     },
                                     bodyparts: {
-                                        cL: 0,
+                                        cl: 1,
                                         cLArray: Array(11).fill(0),
                                         fC: 0,
                                         sC: 0,
                                     },
                                     everyDayObjects: {
-                                        cL: 0,
+                                        cl: 1,
                                         cLArray: Array(11).fill(0),
                                         fC: 0,
                                         sC: 0,
                                     },
                                     shapes: {
-                                        cL: 0,
+                                        cl: 1,
                                         cLArray: Array(11).fill(0),
                                         fC: 0,
                                         sC: 0,
                                     },
                                     sports: {
-                                        cL: 0,
+                                        cl: 1,
                                         cLArray: Array(11).fill(0),
                                         fC: 0,
                                         sC: 0,
