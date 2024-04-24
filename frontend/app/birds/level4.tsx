@@ -33,11 +33,11 @@ import {
 } from "react-native-webrtc";
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 
-export default function BirdAlphaScreen() {
+export default function BirdDetectcreen() {
     const curLevel = 4;
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
     const [cloudText, setCloudText] = useState<string>(
-        "Draw the alphabet of this sign!"
+        "Sign the missing Letters!"
     );
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [border, setBorder] = useState<string>("");
@@ -500,7 +500,7 @@ export default function BirdAlphaScreen() {
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
                 incrementLevelsFinished();
-                router.replace("/birds/level3");
+                router.replace("/birds/level5");
             } else {
                 const newBirdLevel = curLevel + 1;
                 const newUserData = {
@@ -514,7 +514,7 @@ export default function BirdAlphaScreen() {
                 const docRef = doc(db, "users", user.uid);
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
-                router.replace("/birds/level3");
+                router.replace("/birds/level5");
             }
         }
     };
@@ -604,13 +604,13 @@ export default function BirdAlphaScreen() {
                 <AntDesign name="caretright" size={60} color="#59E659" />
             </TouchableOpacity>
 
-            <View className="absolute flex flex-row pl-64 items-start mt-10 bg-[#FDD58D] justify-start w-full h-full">
+            <View className="absolute flex flex-row pl-64 items-center mt-10 bg-[#FDD58D] justify-start w-full h-full">
                 <View
-                    className={` ml-2 p-2  rounded-lg  bg-[#DBB780] ${
+                    className={` ml-2 mt-4 p-2  rounded-lg  bg-[#DBB780] ${
                         activeIndex === 4 ? "scale-105" : ""
                     }`}
                 >
-                    <View className="flex items-center justify-start rounded-lg w-60 bg-slate-100 h-72">
+                    <View className="flex items-center justify-start h-56 rounded-lg mt w-60 bg-slate-100">
                         {localStream && (
                             <View className="w-full h-full overflow-hidden border-b rounded-lg shadow-lg ">
                                 {!isOffCam ? (
@@ -676,7 +676,7 @@ export default function BirdAlphaScreen() {
                         source={require("@/assets/images/Birds/birds-in-sky.jpg")}
                         className="w-48 h-48 rounded-lg "
                     />
-                    <View className="flex flex-row items-center justify-start ">
+                    <View className="flex flex-row items-center justify-start bg-transparent">
                         <View className=" p-2 pb-1  w-8 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
                             <Text
                                 className={`text-2xl text-center font-bold  ${
