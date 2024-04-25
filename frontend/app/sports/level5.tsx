@@ -192,7 +192,7 @@ export default function SportAlphaScreen() {
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
                 incrementLevelsFinished();
-                router.replace("/sports/level5");
+                router.replace("/sports/level6");
             } else {
                 const newSportLevel = curLevel + 1;
                 const newUserData = {
@@ -206,7 +206,7 @@ export default function SportAlphaScreen() {
                 const docRef = doc(db, "users", user.uid);
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
-                router.replace("/sports/level5");
+                router.replace("/sports/level6");
             }
         } else {
             setCloudText("You have finished all levels for today");
