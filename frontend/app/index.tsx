@@ -14,6 +14,7 @@ import React, { useEffect, useState } from "react";
 import { Text, View } from "@/components/Themed";
 import { useAuth } from "@/context/AuthProvider";
 import * as ScreenOrientation from "expo-screen-orientation";
+import { FontAwesome6 } from "@expo/vector-icons";
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 
 export default function LandingScreen() {
@@ -58,6 +59,15 @@ export default function LandingScreen() {
                 source={require("@/assets/images/old-woman.png")}
                 className="absolute bottom-0 left-0 z-50 w-36 h-36"
             />
+            {user && (
+                <TouchableOpacity className="absolute z-50 bg-transparent left-4 top-8">
+                    <FontAwesome6
+                        name="person-circle-check"
+                        size={40}
+                        color="#FB923C"
+                    />
+                </TouchableOpacity>
+            )}
             {!user ? (
                 <TouchableOpacity
                     onPress={() => {

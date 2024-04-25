@@ -13,7 +13,8 @@ import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Text, View } from "@/components/Themed";
 import { db, useAuth } from "@/context/AuthProvider";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Entypo } from "@expo/vector-icons";
+
 import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ScreenOrientation from "expo-screen-orientation";
@@ -27,6 +28,7 @@ export default function AnimalHomeScreen() {
     const [animalLevel, setAnimalLevel] = useState<number | null>();
     // Function to handle press on feature pressables
     const [userData, setUserData] = useState<any>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const handlePressIn = (text: string, index: number) => {
         setCloudText(text);
         setActiveIndex(index);
@@ -241,16 +243,30 @@ export default function AnimalHomeScreen() {
                     </Text>
                 </TouchableOpacity>
             ) : (
-                <TouchableOpacity
-                    onPress={() => {
-                        signOut();
-                    }}
-                    className="absolute z-40 w-24 px-4 py-2 bg-orange-400 shadow-lg top-10 left-6 rounded-3xl"
-                >
-                    <Text className="text-lg text-center text-white">
-                        Logout
-                    </Text>
-                </TouchableOpacity>
+                <View className="absolute z-40 flex flex-row items-center bg-transparent top-10 left-6">
+                    <TouchableOpacity
+                        onPress={() => {
+                            signOut();
+                        }}
+                        className="w-24 px-4 py-2 bg-orange-400 shadow-lg rounded-3xl"
+                    >
+                        <Text className="text-lg text-center text-white">
+                            Logout
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        className="ml-2"
+                        onPress={() => {
+                            setIsModalOpen(true);
+                        }}
+                    >
+                        <Entypo
+                            name="graduation-cap"
+                            size={36}
+                            color="#16A34A"
+                        />
+                    </TouchableOpacity>
+                </View>
             )}
             <View className="flex flex-row w-full h-full bg-[#DBB780]">
                 <Image
@@ -302,6 +318,45 @@ export default function AnimalHomeScreen() {
                     />
                 </View>
             </View>
+            {isModalOpen && (
+                <View className=" absolute flex flex-row items-center justify-center w-full h-full bg-[#00000090] z-50">
+                    <View className="flex flex-col items-center justify-center w-4/6 bg-green-200 border border-green-800 h-4/6 rounded-3xl">
+                        <TouchableOpacity
+                            className="absolute z-10 rounded-full bg-transperant top-2 right-2 "
+                            onPress={() => setIsModalOpen(false)}
+                        >
+                            <Entypo
+                                name="circle-with-cross"
+                                size={40}
+                                color="red"
+                            />
+                        </TouchableOpacity>
+                        <Text className="text-2xl font-semibold ">Animals</Text>
+                        <View className="w-[90%] h-16 mx-3 mt-4 flex flex-row items-center justify-evenly bg-green-300 border-[0.5px] rounded-3xl ">
+                            <Image
+                                source={require("@/assets/images/mag-glass.jpg")}
+                                className="w-12 h-12 rounded-full"
+                            />
+                            <Text className="text-2xl font-semibold ">
+                                Images
+                            </Text>
+                            <Text className="text-2xl font-semibold ">
+                                {userData.animals.fC}/3
+                            </Text>
+                        </View>
+                        <View className="w-[90%] h-16 mx-3 mt-4 flex flex-row items-center justify-evenly bg-green-300 border-[0.5px] rounded-3xl ">
+                            <Image
+                                source={require("@/assets/images/signHands.png")}
+                                className="w-12 h-12 rounded-full"
+                            />
+                            <Text className="text-2xl font-semibold ">ASL</Text>
+                            <Text className="text-2xl font-semibold ">
+                                {userData.animals.sC}/6
+                            </Text>
+                        </View>
+                    </View>
+                </View>
+            )}
         </SafeAreaView>
     );
 }
