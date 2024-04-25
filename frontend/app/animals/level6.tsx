@@ -248,6 +248,11 @@ export default function AnimalFindScreen() {
                 setUserData(newUserData);
                 router.replace("/animals/level7");
             }
+        } else {
+            setCloudText("You have finished all levels for today");
+            setTimeout(() => {
+                router.replace("/animals/");
+            }, 5000);
         }
     };
 

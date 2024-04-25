@@ -521,6 +521,11 @@ export default function BirdDetectcreen() {
                 setUserData(newUserData);
                 router.replace("/birds/");
             }
+        } else {
+            setCloudText("You have finished all levels for today");
+            setTimeout(() => {
+                router.replace("/birds/");
+            }, 5000);
         }
     };
 

@@ -207,6 +207,11 @@ export default function BirdAlphaScreen() {
                 setUserData(newUserData);
                 router.replace("/birds/level10");
             }
+        } else {
+            setCloudText("You have finished all levels for today");
+            setTimeout(() => {
+                router.replace("/birds/");
+            }, 5000);
         }
     };
 

@@ -280,6 +280,11 @@ export default function AnimalDrawScreen() {
                 setUserData(newUserData);
                 router.replace("/animals/level3");
             }
+        } else {
+            setCloudText("You have finished all levels for today");
+            setTimeout(() => {
+                router.replace("/animals/");
+            }, 5000);
         }
     };
 

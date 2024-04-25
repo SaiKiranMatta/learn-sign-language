@@ -516,6 +516,11 @@ export default function AnimalDetectcreen() {
                 setUserData(newUserData);
                 router.replace("/animals/level5");
             }
+        } else {
+            setCloudText("You have finished all levels for today");
+            setTimeout(() => {
+                router.replace("/animals/");
+            }, 5000);
         }
     };
 
