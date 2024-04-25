@@ -292,7 +292,7 @@ export default function AnimalHomeScreen() {
 
             <View className="absolute flex items-center bg-[#FDD58D] justify-center w-full h-full">
                 <View
-                    className={`rounded-full  p-3 bg-[#DBB780] ${
+                    className={`rounded-full  p-3 bg-[#c8fdff] ${
                         activeIndex === 4 ? "scale-105" : ""
                     }`}
                 >

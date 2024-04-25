@@ -26,9 +26,7 @@ ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 export default function BirdFindScreen() {
     const curLevel = 6;
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
-    const [cloudText, setCloudText] = useState<string>(
-        "Find the Bird on the Tree!"
-    );
+    const [cloudText, setCloudText] = useState<string>("Find the Crow!");
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [border, setBorder] = useState<string>("");
     const [progressWidth, setProgressWidth] = useState<number>(0);

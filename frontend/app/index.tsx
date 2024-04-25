@@ -114,13 +114,13 @@ export default function LandingScreen() {
                         onPressOut={() => handlePressOut()}
                     >
                         <View
-                            className={`rounded-full p-8 bg-[#DBB780] ${
+                            className={`rounded-full p-4 bg-[#c8fdff] overflow-hidden ${
                                 activeIndex === 1 ? "scale-105" : ""
                             }`}
                         >
                             <Image
-                                source={require("@/assets/images/bird.png")}
-                                className="w-24 h-24 "
+                                source={require("@/assets/images/Birds/swan.jpeg")}
+                                className="w-36 h-36 "
                             />
                         </View>
                     </Pressable>
@@ -158,19 +158,19 @@ export default function LandingScreen() {
                         </View>
                     </Pressable>
                     <Pressable
-                        className="absolute right-20 top-40 "
+                        className="absolute right-20 top-36 "
                         onPress={() => handlePress("/animals")}
                         onPressIn={() => handlePressIn("Animals", 4)}
                         onPressOut={() => handlePressOut()}
                     >
                         <View
-                            className={`rounded-full p-2 bg-[#DBB780] ${
+                            className={`rounded-full p-2 bg-[#c8fdff] ${
                                 activeIndex === 4 ? "scale-105" : ""
                             }`}
                         >
                             <Image
                                 source={require("@/assets/images/animals/animals-main.png")}
-                                className="rounded-full w-36 h-36 "
+                                className="rounded-full w-44 h-44 "
                             />
                         </View>
                     </Pressable>
