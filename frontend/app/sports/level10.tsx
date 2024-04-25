@@ -353,7 +353,7 @@ export default function SportFindScreen() {
                     />
                     <Pressable
                         onPress={handleObjectPress}
-                        className={`absolute w-24 h-24 bg-transparent ${border}   right-3 top-7`}
+                        className={`absolute w-24 h-24 bg-transparent  ${border}   left-3 top-7`}
                     ></Pressable>
                 </View>
             </View>
