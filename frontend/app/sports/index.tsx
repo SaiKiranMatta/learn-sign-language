@@ -154,7 +154,7 @@ export default function SportsHomeScreen() {
                                         fC: 0,
                                         sC: 0,
                                     },
-                                    sports: {
+                                    animals: {
                                         cl: 1,
                                         cLArray: Array(11).fill(0),
                                         fC: 0,
