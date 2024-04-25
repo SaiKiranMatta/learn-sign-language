@@ -220,12 +220,7 @@ export default function BirdHomeScreen() {
                 source={require("@/assets/images/old-woman.png")}
                 className="absolute bottom-0 left-0 z-50 w-36 h-36"
             />
-            <FontAwesome6
-                className="absolute left-0 z-50 top-4"
-                name="person-circle-check"
-                size={24}
-                color="black"
-            />
+
             {cloudText !== "" && (
                 <ImageBackground
                     source={require("@/assets/images/talkingcloud.png")}

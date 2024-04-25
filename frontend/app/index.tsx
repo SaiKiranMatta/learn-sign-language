@@ -15,13 +15,14 @@ import { Text, View } from "@/components/Themed";
 import { useAuth } from "@/context/AuthProvider";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { FontAwesome6 } from "@expo/vector-icons";
+import ParentModal from "@/components/ParentModal";
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 
 export default function LandingScreen() {
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
     const [cloudText, setCloudText] = useState<string>("");
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
-
+    const [isParentModal, setIsParentModal] = useState<boolean>(false);
     // Function to handle press on feature pressables
 
     const handlePressIn = (text: string, index: number) => {
@@ -37,6 +38,9 @@ export default function LandingScreen() {
         }
     };
 
+    const closeModal = () => {
+        setIsParentModal(false);
+    };
     const handlePressOut = () => {
         setCloudText("");
         setActiveIndex(null);
@@ -60,7 +64,10 @@ export default function LandingScreen() {
                 className="absolute bottom-0 left-0 z-50 w-36 h-36"
             />
             {user && (
-                <TouchableOpacity className="absolute z-50 bg-transparent left-4 top-8">
+                <TouchableOpacity
+                    onPress={() => setIsParentModal(true)}
+                    className="absolute z-50 bg-transparent left-4 top-8"
+                >
                     <FontAwesome6
                         name="person-circle-check"
                         size={40}
@@ -219,6 +226,7 @@ export default function LandingScreen() {
                     </Pressable>
                 </View>
             </ScrollView>
+            {isParentModal && <ParentModal onClose={closeModal} />}
         </SafeAreaView>
     );
 }
