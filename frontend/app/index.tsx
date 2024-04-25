@@ -159,7 +159,8 @@ export default function LandingScreen() {
                     </Pressable>
                     <Pressable
                         className="absolute right-20 top-40 "
-                        onPressIn={() => handlePressIn("Birds", 4)}
+                        onPress={() => handlePress("/animals")}
+                        onPressIn={() => handlePressIn("Animals", 4)}
                         onPressOut={() => handlePressOut()}
                     >
                         <View
@@ -175,7 +176,7 @@ export default function LandingScreen() {
                     </Pressable>
                     <Pressable
                         className="absolute right-60 top-20 "
-                        onPressIn={() => handlePressIn("Birds", 5)}
+                        onPressIn={() => handlePressIn("Animals", 5)}
                         onPressOut={() => handlePressOut()}
                     >
                         <View
