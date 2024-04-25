@@ -126,6 +126,7 @@ export default function LandingScreen() {
                     </Pressable>
                     <Pressable
                         className="absolute top-0 left-28 "
+                        // onPress={() => handlePress("/animals")}
                         onPressIn={() => handlePressIn("Birds", 2)}
                         onPressOut={() => handlePressOut()}
                     >
@@ -135,7 +136,7 @@ export default function LandingScreen() {
                             }`}
                         >
                             <Image
-                                source={require("@/assets/images/bird.png")}
+                                source={require("@/assets/images/animals/animals-main.png")}
                                 className="w-16 h-16 "
                             />
                         </View>
@@ -162,13 +163,13 @@ export default function LandingScreen() {
                         onPressOut={() => handlePressOut()}
                     >
                         <View
-                            className={`rounded-full p-8 bg-[#DBB780] ${
+                            className={`rounded-full p-2 bg-[#DBB780] ${
                                 activeIndex === 4 ? "scale-105" : ""
                             }`}
                         >
                             <Image
-                                source={require("@/assets/images/bird.png")}
-                                className="w-24 h-24 "
+                                source={require("@/assets/images/animals/animals-main.png")}
+                                className="rounded-full w-36 h-36 "
                             />
                         </View>
                     </Pressable>
