@@ -62,8 +62,8 @@ export default function SportDetectcreen() {
     const [ansSdp, setAnsSdp] = useState();
     const [isRemoteDescSet, setIsRemoteDescSet] = useState<boolean>(false);
     const [ans, setAns] = useState<String[]>(["", ""]);
-    const firstAnswer = "S";
-    const secondAnswer = "R";
+    const firstAnswer = "B";
+    const secondAnswer = "S";
     const [firstAnsFound, setFirstAnsFound] = useState<boolean>(false);
     const [translatedText, setTranslatedText] = useState<string>("loading...");
     const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
@@ -500,7 +500,7 @@ export default function SportDetectcreen() {
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
                 incrementLevelsFinished();
-                router.replace("/sports/level5");
+                router.replace("/sports/level9");
             } else {
                 const newBirdLevel = curLevel + 1;
                 const newUserData = {
@@ -514,7 +514,7 @@ export default function SportDetectcreen() {
                 const docRef = doc(db, "users", user.uid);
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
-                router.replace("/sports/level5");
+                router.replace("/sports/level9");
             }
         } else {
             setCloudText("You have finished all levels for today");
@@ -565,7 +565,7 @@ export default function SportDetectcreen() {
             )}
             <View className="absolute z-50 flex flex-row items-center bg-transparent top-10 left-4">
                 <TouchableOpacity
-                    onPress={() => router.replace("/sports/level3")}
+                    onPress={() => router.replace("/sports/level7")}
                     className=""
                 >
                     <AntDesign name="caretleft" size={30} color="#FB923C" />
@@ -681,11 +681,11 @@ export default function SportDetectcreen() {
                         source={require("@/assets/images/sports/basketball.jpg")}
                         className="w-48 h-48 rounded-lg "
                     />
-                    <View className="flex flex-row items-center justify-start bg-transparent">
+                    <View className="flex flex-row items-center justify-center bg-transparent">
                         <View className=" p-2 pb-1  w-8 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
                             <Text
                                 className={`text-2xl text-center font-bold  ${
-                                    ans[0] === "S"
+                                    ans[0] === "B"
                                         ? "text-green-600"
                                         : "text-red-600"
                                 }`}
@@ -695,18 +695,14 @@ export default function SportDetectcreen() {
                         </View>
                         <View className=" p-2 w-8 pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
                             <Text className="text-2xl text-center font-bold text-[#FECE78]">
-                                P
+                                A
                             </Text>
                         </View>
-                        <View className=" p-2 pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
-                            <Text className="text-2xl font-bold text-[#FECE78]">
-                                O
-                            </Text>
-                        </View>
+
                         <View className=" p-2 w-8  pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
                             <Text
                                 className={`text-2xl text-center font-bold  ${
-                                    ans[1] === "R"
+                                    ans[1] === "S"
                                         ? "text-green-600"
                                         : "text-red-600"
                                 }`}
@@ -716,12 +712,17 @@ export default function SportDetectcreen() {
                         </View>
                         <View className=" p-2 pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
                             <Text className="text-2xl font-bold text-[#FECE78]">
-                                T
+                                K
                             </Text>
                         </View>
                         <View className=" p-2 pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
                             <Text className="text-2xl font-bold text-[#FECE78]">
-                                S
+                                E
+                            </Text>
+                        </View>
+                        <View className=" p-2 pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
+                            <Text className="text-2xl font-bold text-[#FECE78]">
+                                T
                             </Text>
                         </View>
                     </View>
