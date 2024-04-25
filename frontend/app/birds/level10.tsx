@@ -350,7 +350,7 @@ export default function BirdFindScreen() {
                     />
                     <Pressable
                         onPress={handleObjectPress}
-                        className={`absolute w-16 h-14 bg-transparent ${border}  left-10 top-6`}
+                        className={`absolute w-20 h-20 bg-transparent ${border}  left-6 bottom-6`}
                     ></Pressable>
                 </View>
             </View>
