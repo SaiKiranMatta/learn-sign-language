@@ -75,6 +75,8 @@ export default function BirdHomeScreen() {
                 case 11:
                     router.replace("/birds/level11");
                     break;
+                case 12:
+                    router.replace("/birds/level12");
                 default:
                     router.replace("/birds/level1");
                     break;
