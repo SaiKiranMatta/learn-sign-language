@@ -120,7 +120,7 @@ export default function LandingScreen() {
                         >
                             <Image
                                 source={require("@/assets/images/Birds/swan.jpeg")}
-                                className="w-36 h-36 "
+                                className="rounded-full w-36 h-36 "
                             />
                         </View>
                     </Pressable>
@@ -175,18 +175,19 @@ export default function LandingScreen() {
                         </View>
                     </Pressable>
                     <Pressable
-                        className="absolute right-60 top-20 "
-                        onPressIn={() => handlePressIn("Animals", 5)}
+                        className="absolute right-80 top-8 "
+                        onPress={() => handlePress("/sports")}
+                        onPressIn={() => handlePressIn("Sports", 5)}
                         onPressOut={() => handlePressOut()}
                     >
                         <View
-                            className={`rounded-full p-8 bg-[#DBB780] ${
+                            className={`rounded-full p-2 bg-[#deffc8] overflow-hidden ${
                                 activeIndex === 5 ? "scale-105" : ""
                             }`}
                         >
                             <Image
-                                source={require("@/assets/images/bird.png")}
-                                className="w-12 h-12 "
+                                source={require("@/assets/images/sports/sports-main.jpg")}
+                                className="w-32 h-32 rounded-full"
                             />
                         </View>
                     </Pressable>
