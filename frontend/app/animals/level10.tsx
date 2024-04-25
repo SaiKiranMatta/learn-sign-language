@@ -10,10 +10,11 @@ import {
     TouchableOpacity,
 } from "react-native";
 import { router } from "expo-router";
+import { Svg, Path } from "react-native-svg";
 import React, { useEffect, useState } from "react";
 import { Text, View } from "@/components/Themed";
 import { db, useAuth } from "@/context/AuthProvider";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Entypo, Octicons } from "@expo/vector-icons";
 import AlphaWordComponent from "@/components/AlphabetComponent";
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { FontAwesome } from "@expo/vector-icons";
@@ -22,11 +23,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ScreenOrientation from "expo-screen-orientation";
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 
-export default function AnimalAlphaScreen() {
-    const curLevel = 9;
-    const alphaWord = "LION";
+export default function AnimalFindScreen() {
+    const curLevel = 10;
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
-    const [cloudText, setCloudText] = useState<string>("Learn these signs!");
+    const [cloudText, setCloudText] = useState<string>("Find the Cow!");
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [border, setBorder] = useState<string>("");
     const [progressWidth, setProgressWidth] = useState<number>(0);
@@ -34,7 +34,46 @@ export default function AnimalAlphaScreen() {
     // Function to handle press on feature pressables
     const [userData, setUserData] = useState<any>(null);
     const [levelsFinishedToday, setLevelsFinishedToday] = useState(0);
+    const [paths, setPaths] = useState<string[]>([]);
+    const [currentPath, setCurrentPath] = useState<string[]>([]);
+    const [isComplete, setIsComplete] = useState<boolean>(false);
+    const [isClearButtonClicked, setClearButtonClicked] =
+        useState<boolean>(false);
+    const onTouchEnd = () => {
+        setPaths([...paths, currentPath.join("")]);
+        setCurrentPath([]);
+        setClearButtonClicked(false);
+    };
 
+    const onTouchMove = (event: any) => {
+        const newPath = [...currentPath];
+        const locationX = event.nativeEvent.locationX;
+        const locationY = event.nativeEvent.locationY;
+        const newPoint = `${newPath.length === 0 ? "M" : ""}${locationX.toFixed(
+            0
+        )},${locationY.toFixed(0)} `;
+        newPath.push(newPoint);
+        setCurrentPath(newPath);
+    };
+
+    const handleClearButtonClick = () => {
+        setPaths([]);
+        setCurrentPath([]);
+        setClearButtonClicked(true);
+    };
+    // Function to handle press on feature pressables
+
+    // useEffect(() => {
+    //     if (!user) {
+    //         router.replace("/");
+    //     }
+    // }, [user]);
+
+    const handleObjectPress = () => {
+        setIsComplete(true);
+        setBorder("border border-2 border-green-600");
+        setCloudText("Good Job, Animal Found!");
+    };
     useEffect(() => {
         // Load the count and last update date from AsyncStorage when the component mounts
         loadLevelsFinishedToday();
@@ -174,16 +213,18 @@ export default function AnimalAlphaScreen() {
     const handleNextPressIn = async () => {
         // console.log(userData);
         if (levelsFinishedToday < 10 && user) {
-            if (userData.animals.cLArray[curLevel - 1] === 0) {
-                const newAnimalLevel = curLevel + 1;
-                const newAnimalLevelArray = [...userData.animals.cLArray];
-                newAnimalLevelArray[curLevel - 1] = 1;
+            if (userData.animals.cLArray[curLevel - 1] === 0 && isComplete) {
+                const newBirdLevel = curLevel + 1;
+                const newBirdLevelArray = [...userData.animals.cLArray];
+                newBirdLevelArray[curLevel - 1] = 1;
+                const fC = userData.animals.fC + 1;
                 const newUserData = {
                     ...userData,
                     animals: {
                         ...userData.animals,
-                        cLArray: newAnimalLevelArray,
-                        cL: newAnimalLevel,
+                        cLArray: newBirdLevelArray,
+                        cL: newBirdLevel,
+                        fC: fC,
                     },
                 };
 
@@ -191,21 +232,21 @@ export default function AnimalAlphaScreen() {
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
                 incrementLevelsFinished();
-                router.replace("/animals/level10");
+                router.replace("/animals/level11");
             } else {
-                const newAnimalLevel = curLevel + 1;
+                const newBirdLevel = curLevel + 1;
                 const newUserData = {
                     ...userData,
                     animals: {
                         ...userData.animals,
-                        cL: newAnimalLevel,
+                        cL: newBirdLevel,
                     },
                 };
 
                 const docRef = doc(db, "users", user.uid);
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
-                router.replace("/animals/level10");
+                router.replace("/animals/level11");
             }
         } else {
             setCloudText("You have finished all levels for today");
@@ -256,7 +297,7 @@ export default function AnimalAlphaScreen() {
             )}
             <View className="absolute z-50 flex flex-row items-center bg-transparent top-10 left-4">
                 <TouchableOpacity
-                    onPress={() => router.replace("/animals/level8")}
+                    onPress={() => router.replace("/animals/level9")}
                     className=""
                 >
                     <AntDesign name="caretleft" size={30} color="#FB923C" />
@@ -300,8 +341,21 @@ export default function AnimalAlphaScreen() {
                 <AntDesign name="caretright" size={60} color="#59E659" />
             </TouchableOpacity>
 
-            <View className="absolute flex pl-48 pr-4 pt-10 items-center bg-[#FDD58D] justify-center w-full h-full">
-                <AlphaWordComponent alphaWord={alphaWord} />
+            <View className="absolute flex pl-48 items-center bg-[#FDD58D] justify-end w-full h-full">
+                <View
+                    className={`  p-2 rounded-lg bg-[#DBB780] ${
+                        activeIndex === 4 ? "scale-105" : ""
+                    }`}
+                >
+                    <Image
+                        source={require("@/assets/images/animals/find_animal.jpg")}
+                        className="h-56 rounded-lg w-96"
+                    />
+                    <Pressable
+                        onPress={handleObjectPress}
+                        className={`absolute w-40 h-52 bg-transparent b ${border}  right-2 top-2`}
+                    ></Pressable>
+                </View>
             </View>
         </SafeAreaView>
     );
