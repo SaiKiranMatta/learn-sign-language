@@ -22,7 +22,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ScreenOrientation from "expo-screen-orientation";
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 
-export default function BirdAlphaScreen() {
+export default function AnimalAlphaScreen() {
     const curLevel = 1;
     const alphaWord = "ANIMALS";
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
@@ -30,7 +30,7 @@ export default function BirdAlphaScreen() {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [border, setBorder] = useState<string>("");
     const [progressWidth, setProgressWidth] = useState<number>(0);
-    const [birdLevel, setBirdLevel] = useState<number | null>();
+    const [animalLevel, setAnimalLevel] = useState<number | null>();
     // Function to handle press on feature pressables
     const [userData, setUserData] = useState<any>(null);
     const [levelsFinishedToday, setLevelsFinishedToday] = useState(0);
@@ -97,7 +97,7 @@ export default function BirdAlphaScreen() {
             if (!user) {
                 router.replace("/");
             } else {
-                if (!birdLevel) {
+                if (!animalLevel) {
                     const docRef = doc(db, "users", user.uid);
                     const docSnap = await getDoc(docRef);
                     if (!docSnap.exists()) {
@@ -158,12 +158,12 @@ export default function BirdAlphaScreen() {
         };
 
         addUserDocument();
-    }, [user, birdLevel, setBirdLevel]);
+    }, [user, animalLevel, setAnimalLevel]);
 
     useEffect(() => {
         if (userData) {
             setProgressWidth(
-                userData.birds.cLArray.reduce(
+                userData.animals.cLArray.reduce(
                     (acc: number, cur: number) => acc + cur,
                     0
                 )
@@ -174,16 +174,16 @@ export default function BirdAlphaScreen() {
     const handleNextPressIn = async () => {
         // console.log(userData);
         if (levelsFinishedToday < 10 && user) {
-            if (userData.birds.cLArray[curLevel - 1] === 0) {
-                const newBirdLevel = curLevel + 1;
-                const newBirdLevelArray = [...userData.birds.cLArray];
-                newBirdLevelArray[curLevel - 1] = 1;
+            if (userData.animals.cLArray[curLevel - 1] === 0) {
+                const newAnimalLevel = curLevel + 1;
+                const newAnimalLevelArray = [...userData.animals.cLArray];
+                newAnimalLevelArray[curLevel - 1] = 1;
                 const newUserData = {
                     ...userData,
-                    birds: {
-                        ...userData.birds,
-                        cLArray: newBirdLevelArray,
-                        cL: newBirdLevel,
+                    animals: {
+                        ...userData.animals,
+                        cLArray: newAnimalLevelArray,
+                        cL: newAnimalLevel,
                     },
                 };
 
@@ -193,12 +193,12 @@ export default function BirdAlphaScreen() {
                 incrementLevelsFinished();
                 router.replace("/animals/level2");
             } else {
-                const newBirdLevel = curLevel + 1;
+                const newAnimalLevel = curLevel + 1;
                 const newUserData = {
                     ...userData,
-                    birds: {
-                        ...userData.birds,
-                        cL: newBirdLevel,
+                    animals: {
+                        ...userData.animals,
+                        cL: newAnimalLevel,
                     },
                 };
 
