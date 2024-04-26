@@ -10,13 +10,23 @@ import {
     TouchableOpacity,
 } from "react-native";
 import { router } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Text, View } from "@/components/Themed";
-import { useAuth } from "@/context/AuthProvider";
+import { db, useAuth } from "@/context/AuthProvider";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { FontAwesome6 } from "@expo/vector-icons";
 import ParentModal from "@/components/ParentModal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import FirstModal from "@/components/FirstModal";
+import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+import { LogBox } from "react-native";
+
+// Ignore log notification by message
+LogBox.ignoreLogs(["Warning: ..."]);
+
+//Ignore all log notifications
+LogBox.ignoreAllLogs();
 
 export default function LandingScreen() {
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
@@ -24,6 +34,93 @@ export default function LandingScreen() {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [isParentModal, setIsParentModal] = useState<boolean>(false);
     // Function to handle press on feature pressables
+    const [firstLogin, setFirstLogin] = useState<boolean | null>(null);
+    // const [firstModal, setFirstModal] = useState<boolean>(false);
+    // const isFirstRun = useRef(true);
+    const [userData, setUserData] = useState<any>(null);
+
+    useEffect(() => {
+        const addUserDocument = async () => {
+            if (!user) {
+                router.replace("/");
+            } else {
+                if (!userData) {
+                    setFirstLogin(true);
+                    const docRef = doc(db, "users", user.uid);
+                    const docSnap = await getDoc(docRef);
+                    if (!docSnap.exists()) {
+                        try {
+                            const usersRef = collection(db, "users");
+                            const docRef = await setDoc(
+                                doc(usersRef, user.uid),
+                                {
+                                    FL: 0,
+                                    birds: {
+                                        cl: 1,
+                                        cLArray: Array(11).fill(0),
+                                        fC: 0,
+                                        sC: 0,
+                                    },
+                                    animals: {
+                                        cl: 1,
+                                        cLArray: Array(11).fill(0),
+                                        fC: 0,
+                                        sC: 0,
+                                    },
+                                    bodyparts: {
+                                        cl: 1,
+                                        cLArray: Array(11).fill(0),
+                                        fC: 0,
+                                        sC: 0,
+                                    },
+                                    everyDayObjects: {
+                                        cl: 1,
+                                        cLArray: Array(11).fill(0),
+                                        fC: 0,
+                                        sC: 0,
+                                    },
+                                    shapes: {
+                                        cl: 1,
+                                        cLArray: Array(11).fill(0),
+                                        fC: 0,
+                                        sC: 0,
+                                    },
+                                    sports: {
+                                        cl: 1,
+                                        cLArray: Array(11).fill(0),
+                                        fC: 0,
+                                        sC: 0,
+                                    },
+                                }
+                            );
+
+                            console.log("Document written  ");
+                        } catch (e) {
+                            console.error("Error adding document: ", e);
+                        }
+                    } else {
+                        // console.log("Document data:", docSnap.data());
+                        setUserData(docSnap.data());
+                    }
+                }
+            }
+        };
+
+        addUserDocument();
+    }, [user]);
+
+    const setFirstLoginFalse = async () => {
+        if (user) {
+            const newFC = 1;
+            const newUserData = {
+                ...userData,
+                FL: newFC,
+            };
+            const docRef = doc(db, "users", user.uid);
+            await setDoc(docRef, newUserData);
+            setUserData(newUserData);
+        }
+    };
 
     const handlePressIn = (text: string, index: number) => {
         if (user) {
@@ -40,6 +137,10 @@ export default function LandingScreen() {
 
     const closeModal = () => {
         setIsParentModal(false);
+    };
+
+    const closeFirstModal = () => {
+        setFirstLogin(false);
     };
     const handlePressOut = () => {
         setCloudText("");
@@ -230,6 +331,7 @@ export default function LandingScreen() {
                 </View>
             </ScrollView>
             {isParentModal && <ParentModal onClose={closeModal} />}
+            {firstLogin && <FirstModal onClose={closeFirstModal} />}
         </SafeAreaView>
     );
 }

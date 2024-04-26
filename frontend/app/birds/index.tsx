@@ -341,7 +341,7 @@ export default function BirdHomeScreen() {
                                 Images
                             </Text>
                             <Text className="text-2xl font-semibold ">
-                                {userData.birds.fC}/3
+                                {userData?.birds.fC}/3
                             </Text>
                         </View>
                         <View className="w-[90%] h-16 mx-3 mt-4 flex flex-row items-center justify-evenly bg-green-300 border-[0.5px] rounded-3xl ">
@@ -351,7 +351,7 @@ export default function BirdHomeScreen() {
                             />
                             <Text className="text-2xl font-semibold ">ASL</Text>
                             <Text className="text-2xl font-semibold ">
-                                {userData.birds.sC}/6
+                                {userData?.birds.sC}/6
                             </Text>
                         </View>
                     </View>
