@@ -121,11 +121,11 @@ export default function LandingScreen() {
                     />
                     <Image
                         source={require("@/assets/images/transperant.png")}
-                        className="bottom-0 left-0 w-32 h-1"
+                        className="bottom-0 left-0 w-48 h-1"
                     />
 
                     <Pressable
-                        className="absolute left-52 top-32"
+                        className="absolute left-56 top-28"
                         onPress={() => handlePress("/birds")}
                         onPressIn={() => handlePressIn("Birds", 1)}
                         onPressOut={() => handlePressOut()}
@@ -143,39 +143,24 @@ export default function LandingScreen() {
                     </Pressable>
                     <Pressable
                         className="absolute top-0 left-28 "
-                        // onPress={() => handlePress("/animals")}
-                        onPressIn={() => handlePressIn("Birds", 2)}
+                        onPress={() => handlePress("/bodyparts")}
+                        onPressIn={() => handlePressIn("Body parts", 2)}
                         onPressOut={() => handlePressOut()}
                     >
                         <View
-                            className={`rounded-full p-8 bg-[#DBB780] ${
+                            className={`rounded-full p-2 bg-pink-200 ${
                                 activeIndex === 2 ? "scale-105" : ""
                             }`}
                         >
                             <Image
-                                source={require("@/assets/images/animals/animals-main.png")}
-                                className="w-16 h-16 "
+                                source={require("@/assets/images/bodyparts/body-parts-main.jpg")}
+                                className="rounded-full w-28 h-28"
                             />
                         </View>
                     </Pressable>
+
                     <Pressable
-                        className="absolute left-2 top-20 "
-                        onPressIn={() => handlePressIn("Birds", 3)}
-                        onPressOut={() => handlePressOut()}
-                    >
-                        <View
-                            className={`rounded-full p-8 bg-[#DBB780] ${
-                                activeIndex === 3 ? "scale-105" : ""
-                            }`}
-                        >
-                            <Image
-                                source={require("@/assets/images/bird.png")}
-                                className="w-8 h-8 "
-                            />
-                        </View>
-                    </Pressable>
-                    <Pressable
-                        className="absolute right-20 top-36 "
+                        className="absolute right-48 top-36 "
                         onPress={() => handlePress("/animals")}
                         onPressIn={() => handlePressIn("Animals", 4)}
                         onPressOut={() => handlePressOut()}
@@ -192,7 +177,7 @@ export default function LandingScreen() {
                         </View>
                     </Pressable>
                     <Pressable
-                        className="absolute right-80 top-8 "
+                        className="absolute right-96 top-8 "
                         onPress={() => handlePress("/sports")}
                         onPressIn={() => handlePressIn("Sports", 5)}
                         onPressOut={() => handlePressOut()}
@@ -209,18 +194,36 @@ export default function LandingScreen() {
                         </View>
                     </Pressable>
                     <Pressable
-                        className="absolute right-[-40px] top-[-40px]  "
-                        onPressIn={() => handlePressIn("Birds", 6)}
+                        className="absolute right-16 top-[-40px]  "
+                        onPress={() => handlePress("/shapes")}
+                        onPressIn={() => handlePressIn("Shapes", 6)}
                         onPressOut={() => handlePressOut()}
                     >
                         <View
-                            className={`rounded-full p-8 bg-[#DBB780] ${
+                            className={`rounded-full p-2 overflow-hidden  bg-amber-200 ${
                                 activeIndex === 6 ? "scale-105" : ""
                             }`}
                         >
                             <Image
-                                source={require("@/assets/images/bird.png")}
-                                className=" w-28 h-28"
+                                source={require("@/assets/images/shapes/findshapes.jpeg")}
+                                className="w-40 h-40 rounded-full"
+                            />
+                        </View>
+                    </Pressable>
+                    <Pressable
+                        className="absolute right-[-40px] bottom-16  "
+                        onPress={() => handlePress("/everyday")}
+                        onPressIn={() => handlePressIn("Every Day Objects", 3)}
+                        onPressOut={() => handlePressOut()}
+                    >
+                        <View
+                            className={`rounded-full p-2 overflow-hidden bg-red-200 ${
+                                activeIndex === 6 ? "scale-105" : ""
+                            }`}
+                        >
+                            <Image
+                                source={require("@/assets/images/Every Day Objects/findeverydayobjects.jpg")}
+                                className="w-32 h-32 rounded-full"
                             />
                         </View>
                     </Pressable>
