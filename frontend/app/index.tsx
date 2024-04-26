@@ -54,40 +54,39 @@ export default function LandingScreen() {
                             const docRef = await setDoc(
                                 doc(usersRef, user.uid),
                                 {
-                                    FL: 0,
                                     birds: {
                                         cl: 1,
-                                        cLArray: Array(11).fill(0),
+                                        cLArray: Array(12).fill(0),
                                         fC: 0,
                                         sC: 0,
                                     },
                                     animals: {
                                         cl: 1,
-                                        cLArray: Array(11).fill(0),
+                                        cLArray: Array(12).fill(0),
                                         fC: 0,
                                         sC: 0,
                                     },
                                     bodyparts: {
                                         cl: 1,
-                                        cLArray: Array(11).fill(0),
+                                        cLArray: Array(12).fill(0),
                                         fC: 0,
                                         sC: 0,
                                     },
                                     everyDayObjects: {
                                         cl: 1,
-                                        cLArray: Array(11).fill(0),
+                                        cLArray: Array(12).fill(0),
                                         fC: 0,
                                         sC: 0,
                                     },
                                     shapes: {
                                         cl: 1,
-                                        cLArray: Array(11).fill(0),
+                                        cLArray: Array(12).fill(0),
                                         fC: 0,
                                         sC: 0,
                                     },
                                     sports: {
                                         cl: 1,
-                                        cLArray: Array(11).fill(0),
+                                        cLArray: Array(12).fill(0),
                                         fC: 0,
                                         sC: 0,
                                     },
