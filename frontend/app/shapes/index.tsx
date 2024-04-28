@@ -13,7 +13,12 @@ import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Text, View } from "@/components/Themed";
 import { db, useAuth } from "@/context/AuthProvider";
-import { AntDesign, Entypo, Octicons } from "@expo/vector-icons";
+import {
+    AntDesign,
+    Entypo,
+    MaterialCommunityIcons,
+    Octicons,
+} from "@expo/vector-icons";
 import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ScreenOrientation from "expo-screen-orientation";
@@ -252,6 +257,16 @@ export default function ShapesHomeScreen() {
                         <Text className="text-lg text-center text-white">
                             Logout
                         </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => router.replace("/")}
+                        className="ml-2"
+                    >
+                        <MaterialCommunityIcons
+                            name="home-circle-outline"
+                            size={45}
+                            color="#FB923C"
+                        />
                     </TouchableOpacity>
                     <TouchableOpacity
                         className="ml-2"
