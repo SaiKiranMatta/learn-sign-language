@@ -34,7 +34,7 @@ import {
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 
 export default function ShapeDetectcreen() {
-    const curLevel = 8;
+    const curLevel = 12;
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
     const [cloudText, setCloudText] = useState<string>(
         "Sign the missing Letters!"
@@ -62,8 +62,8 @@ export default function ShapeDetectcreen() {
     const [ansSdp, setAnsSdp] = useState();
     const [isRemoteDescSet, setIsRemoteDescSet] = useState<boolean>(false);
     const [ans, setAns] = useState<String[]>(["", ""]);
-    const firstAnswer = "C";
-    const secondAnswer = "L";
+    const firstAnswer = "S";
+    const secondAnswer = "R";
     const [firstAnsFound, setFirstAnsFound] = useState<boolean>(false);
     const [translatedText, setTranslatedText] = useState<string>("loading...");
     const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
@@ -503,7 +503,7 @@ export default function ShapeDetectcreen() {
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
                 incrementLevelsFinished();
-                router.replace("/shapes/level9");
+                router.replace("/shapes/");
             } else {
                 const newBirdLevel = curLevel + 1;
                 const newUserData = {
@@ -517,7 +517,7 @@ export default function ShapeDetectcreen() {
                 const docRef = doc(db, "users", user.uid);
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
-                router.replace("/shapes/level9");
+                router.replace("/shapes/");
             }
         } else {
             setCloudText("You have finished all levels for today");
@@ -685,14 +685,14 @@ export default function ShapeDetectcreen() {
                     className={` ml-4  mt-2 rounded-lg flex flex-col justify-between  bg-[#FDD58D]`}
                 >
                     <Image
-                        source={require("@/assets/images/shapes/circle.png")}
+                        source={require("@/assets/images/shapes/square.png")}
                         className="w-48 h-48 rounded-lg "
                     />
                     <View className="flex flex-row items-center justify-start bg-transparent">
                         <View className=" p-2 pb-1  w-8 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
                             <Text
                                 className={`text-2xl text-center font-bold  ${
-                                    ans[0] === "C"
+                                    ans[0] === "S"
                                         ? "text-green-600"
                                         : "text-red-600"
                                 }`}
@@ -702,23 +702,23 @@ export default function ShapeDetectcreen() {
                         </View>
                         <View className=" p-2 w-8 pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
                             <Text className="text-2xl text-center font-bold text-[#FECE78]">
-                                I
+                                Q
                             </Text>
                         </View>
                         <View className=" p-2 pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
                             <Text className="text-2xl font-bold text-[#FECE78]">
-                                R
+                                U
                             </Text>
                         </View>
                         <View className=" p-2 pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
                             <Text className="text-2xl font-bold text-[#FECE78]">
-                                C
+                                A
                             </Text>
                         </View>
                         <View className=" p-2 w-8  pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
                             <Text
                                 className={`text-2xl text-center font-bold  ${
-                                    ans[1] === "L"
+                                    ans[1] === "R"
                                         ? "text-green-600"
                                         : "text-red-600"
                                 }`}
