@@ -503,7 +503,7 @@ export default function ShapeDetectcreen() {
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
                 incrementLevelsFinished();
-                router.replace("/shapes/level5");
+                router.replace("/shapes/level9");
             } else {
                 const newBirdLevel = curLevel + 1;
                 const newUserData = {
@@ -517,7 +517,7 @@ export default function ShapeDetectcreen() {
                 const docRef = doc(db, "users", user.uid);
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
-                router.replace("/shapes/level5");
+                router.replace("/shapes/level9");
             }
         } else {
             setCloudText("You have finished all levels for today");
@@ -568,7 +568,7 @@ export default function ShapeDetectcreen() {
             )}
             <View className="absolute z-50 flex flex-row items-center bg-transparent top-10 left-4">
                 <TouchableOpacity
-                    onPress={() => router.replace("/shapes/level3")}
+                    onPress={() => router.replace("/shapes/level7")}
                     className=""
                 >
                     <AntDesign name="caretleft" size={30} color="#FB923C" />
@@ -685,7 +685,7 @@ export default function ShapeDetectcreen() {
                     className={` ml-4  mt-2 rounded-lg flex flex-col justify-between  bg-[#FDD58D]`}
                 >
                     <Image
-                        source={require("@/assets/images/shapes/findshapes.jpeg")}
+                        source={require("@/assets/images/shapes/circle.png")}
                         className="w-48 h-48 rounded-lg "
                     />
                     <View className="flex flex-row items-center justify-start bg-transparent">
