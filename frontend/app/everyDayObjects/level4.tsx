@@ -64,8 +64,8 @@ export default function EveryDayObjectDetectcreen() {
     const [ansSdp, setAnsSdp] = useState();
     const [isRemoteDescSet, setIsRemoteDescSet] = useState<boolean>(false);
     const [ans, setAns] = useState<String[]>(["", ""]);
-    const firstAnswer = "S";
-    const secondAnswer = "P";
+    const firstAnswer = "O";
+    const secondAnswer = "B";
     const [firstAnsFound, setFirstAnsFound] = useState<boolean>(false);
     const [translatedText, setTranslatedText] = useState<string>("loading...");
     const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
@@ -445,7 +445,7 @@ export default function EveryDayObjectDetectcreen() {
                                         fC: 0,
                                         sC: 0,
                                     },
-                                    everyDayObjects: {
+                                    shapes: {
                                         cl: 1,
                                         cLArray: Array(11).fill(0),
                                         fC: 0,
