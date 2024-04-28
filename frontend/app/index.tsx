@@ -318,7 +318,7 @@ export default function LandingScreen() {
                             }`}
                         >
                             <Image
-                                source={require("@/assets/images/Every Day Objects/findeverydayobjects.jpg")}
+                                source={require("@/assets/images/everyDayObjects/findeverydayobjects.jpg")}
                                 className="w-32 h-32 rounded-full"
                             />
                         </View>
