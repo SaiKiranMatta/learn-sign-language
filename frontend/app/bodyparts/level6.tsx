@@ -23,16 +23,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ScreenOrientation from "expo-screen-orientation";
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 
-export default function EveryDayObjectFindScreen() {
+export default function BodypartFindScreen() {
     const curLevel = 6;
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
-    const [cloudText, setCloudText] = useState<string>("Find the Scissors!");
+    const [cloudText, setCloudText] = useState<string>("Find Eyes!");
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [border, setBorder] = useState<string>("");
     const [progressWidth, setProgressWidth] = useState<number>(0);
-    const [everyDayObjectLevel, setEveryDayObjectLevel] = useState<
-        number | null
-    >();
+    const [bodypartLevel, setBodypartLevel] = useState<number | null>();
     // Function to handle press on feature pressables
     const [userData, setUserData] = useState<any>(null);
     const [levelsFinishedToday, setLevelsFinishedToday] = useState(0);
@@ -138,7 +136,7 @@ export default function EveryDayObjectFindScreen() {
             if (!user) {
                 router.replace("/");
             } else {
-                if (!everyDayObjectLevel) {
+                if (!bodypartLevel) {
                     const docRef = doc(db, "users", user.uid);
                     const docSnap = await getDoc(docRef);
                     if (!docSnap.exists()) {
@@ -199,12 +197,12 @@ export default function EveryDayObjectFindScreen() {
         };
 
         addUserDocument();
-    }, [user, everyDayObjectLevel, setEveryDayObjectLevel]);
+    }, [user, bodypartLevel, setBodypartLevel]);
 
     useEffect(() => {
         if (userData) {
             setProgressWidth(
-                userData.everyDayObjects.cLArray.reduce(
+                userData.bodyparts.cLArray.reduce(
                     (acc: number, cur: number) => acc + cur,
                     0
                 )
@@ -215,18 +213,15 @@ export default function EveryDayObjectFindScreen() {
     const handleNextPressIn = async () => {
         // console.log(userData);
         if (levelsFinishedToday < 10 && user) {
-            if (
-                userData.everyDayObjects.cLArray[curLevel - 1] === 0 &&
-                isComplete
-            ) {
+            if (userData.bodyparts.cLArray[curLevel - 1] === 0 && isComplete) {
                 const newBirdLevel = curLevel + 1;
-                const newBirdLevelArray = [...userData.everyDayObjects.cLArray];
+                const newBirdLevelArray = [...userData.bodyparts.cLArray];
                 newBirdLevelArray[curLevel - 1] = 1;
-                const fC = userData.everyDayObjects.fC + 1;
+                const fC = userData.bodyparts.fC + 1;
                 const newUserData = {
                     ...userData,
-                    everyDayObjects: {
-                        ...userData.everyDayObjects,
+                    bodyparts: {
+                        ...userData.bodyparts,
                         cLArray: newBirdLevelArray,
                         cL: newBirdLevel,
                         fC: fC,
@@ -237,13 +232,13 @@ export default function EveryDayObjectFindScreen() {
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
                 incrementLevelsFinished();
-                router.replace("/everyDayObjects/level7");
+                router.replace("/bodyparts/level7");
             } else {
                 const newBirdLevel = curLevel + 1;
                 const newUserData = {
                     ...userData,
-                    everyDayObjects: {
-                        ...userData.everyDayObjects,
+                    bodyparts: {
+                        ...userData.bodyparts,
                         cL: newBirdLevel,
                     },
                 };
@@ -251,12 +246,12 @@ export default function EveryDayObjectFindScreen() {
                 const docRef = doc(db, "users", user.uid);
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
-                router.replace("/everyDayObjects/level7");
+                router.replace("/bodyparts/level7");
             }
         } else {
             setCloudText("You have finished all levels for today");
             setTimeout(() => {
-                router.replace("/everyDayObjects/");
+                router.replace("/bodyparts/");
             }, 5000);
         }
     };
@@ -302,7 +297,7 @@ export default function EveryDayObjectFindScreen() {
             )}
             <View className="absolute z-50 flex flex-row items-center bg-transparent top-10 left-4">
                 <TouchableOpacity
-                    onPress={() => router.replace("/everyDayObjects/level5")}
+                    onPress={() => router.replace("/bodyparts/level5")}
                     className=""
                 >
                     <AntDesign name="caretleft" size={30} color="#FB923C" />
@@ -357,12 +352,16 @@ export default function EveryDayObjectFindScreen() {
                     }`}
                 >
                     <Image
-                        source={require("@/assets/images/everyDayObjects/findeverydayobjects.jpg")}
+                        source={require("@/assets/images/bodyparts/find-body-parts.jpg")}
                         className="h-56 rounded-lg w-96"
                     />
                     <Pressable
                         onPress={handleObjectPress}
-                        className={`absolute w-36  h-36 bg-transparent ${border}  left-40 bottom-2`}
+                        className={`absolute w-20  h-8 bg-transparent ${border}  left-28 top-28 rounded-3xl`}
+                    ></Pressable>
+                    <Pressable
+                        onPress={handleObjectPress}
+                        className={`absolute w-20  h-8 bg-transparent ${border}  left-52 top-28 rounded-3xl`}
                     ></Pressable>
                 </View>
             </View>
