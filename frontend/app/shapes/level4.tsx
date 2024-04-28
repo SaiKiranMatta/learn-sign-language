@@ -583,7 +583,10 @@ export default function ShapeDetectcreen() {
                         color="#FB923C"
                     />
                 </TouchableOpacity>
-                <View className="flex flex-row items-center p-2 ml-2 rounded-md">
+                <View
+                    style={styles.shadow}
+                    className="flex flex-row items-center p-2 ml-2 rounded-md"
+                >
                     <Image
                         source={require("@/assets/images/brain.png")}
                         className="w-6 h-6 mr-2"
@@ -614,6 +617,7 @@ export default function ShapeDetectcreen() {
 
             <View className="absolute flex flex-row pl-64 items-center mt-10 bg-[#FDD58D] justify-start w-full h-full">
                 <View
+                    style={styles.shadow}
                     className={` ml-2 mt-4 p-2  rounded-lg  bg-[#DBB780] ${
                         activeIndex === 4 ? "scale-105" : ""
                     }`}
@@ -733,3 +737,9 @@ export default function ShapeDetectcreen() {
         </SafeAreaView>
     );
 }
+
+const styles = StyleSheet.create({
+    shadow: {
+        elevation: 10,
+    },
+});
