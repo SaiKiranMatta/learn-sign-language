@@ -173,7 +173,7 @@ export default function ShapesHomeScreen() {
                                         fC: 0,
                                         sC: 0,
                                     },
-                                    shapes: {
+                                    sports: {
                                         cl: 1,
                                         cLArray: Array(11).fill(0),
                                         fC: 0,
