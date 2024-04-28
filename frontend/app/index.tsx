@@ -314,7 +314,7 @@ export default function LandingScreen() {
                         <View
                             style={styles.shadow}
                             className={`rounded-full p-2 overflow-hidden bg-red-200 ${
-                                activeIndex === 6 ? "scale-105" : ""
+                                activeIndex === 3 ? "scale-105" : ""
                             }`}
                         >
                             <Image

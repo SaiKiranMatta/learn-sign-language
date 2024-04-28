@@ -211,6 +211,7 @@ class VideoTransformTrack(MediaStreamTrack):
                 #             cv2.LINE_AA)
                 print("Predicted character:", predicted_character)
                 live_labels.add(predicted_character)
+                print(live_labels)
             # cv2.imshow('frame', frame)
             # key = cv2.waitKey(1)
             # if key == 27:  # Escape key
@@ -306,6 +307,7 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
 @app.get('/live_labels')
 def get_live_labels():
     labels = list(live_labels)
+    print(labels)
     live_labels.clear()
     return JSONResponse({"labels" : labels})
 # detection[1] contains the recognized text

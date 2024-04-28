@@ -344,7 +344,10 @@ export default function ShapeDrawScreen() {
                         color="#FB923C"
                     />
                 </TouchableOpacity>
-                <View className="flex flex-row items-center p-2 ml-2 rounded-md">
+                <View
+                    style={styles.shadow}
+                    className="flex flex-row items-center p-2 ml-2 rounded-md"
+                >
                     <Image
                         source={require("@/assets/images/brain.png")}
                         className="w-6 h-6 mr-2"

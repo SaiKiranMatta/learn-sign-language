@@ -26,7 +26,7 @@ ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 export default function ShapeFindScreen() {
     const curLevel = 3;
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
-    const [cloudText, setCloudText] = useState<string>("Find the Shape!");
+    const [cloudText, setCloudText] = useState<string>("Find the Triangle!");
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [border, setBorder] = useState<string>("");
     const [progressWidth, setProgressWidth] = useState<number>(0);
@@ -312,7 +312,10 @@ export default function ShapeFindScreen() {
                         color="#FB923C"
                     />
                 </TouchableOpacity>
-                <View className="flex flex-row items-center p-2 ml-2 rounded-md">
+                <View
+                    style={styles.shadow}
+                    className="flex flex-row items-center p-2 ml-2 rounded-md"
+                >
                     <Image
                         source={require("@/assets/images/brain.png")}
                         className="w-6 h-6 mr-2"
@@ -343,6 +346,7 @@ export default function ShapeFindScreen() {
 
             <View className="absolute flex pl-48 items-center bg-[#FDD58D] justify-end w-full h-full">
                 <View
+                    style={styles.shadow}
                     className={`  p-2 rounded-lg bg-[#DBB780] ${
                         activeIndex === 4 ? "scale-105" : ""
                     }`}
@@ -360,3 +364,8 @@ export default function ShapeFindScreen() {
         </SafeAreaView>
     );
 }
+const styles = StyleSheet.create({
+    shadow: {
+        elevation: 10,
+    },
+});
