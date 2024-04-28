@@ -74,7 +74,7 @@ export default function EveryDayObjectFindScreen() {
     const handleObjectPress = () => {
         setIsComplete(true);
         setBorder("border border-2 border-green-600");
-        setCloudText("Good Job, Square Found!");
+        setCloudText("Good Job, Comb Found!");
     };
     useEffect(() => {
         // Load the count and last update date from AsyncStorage when the component mounts
