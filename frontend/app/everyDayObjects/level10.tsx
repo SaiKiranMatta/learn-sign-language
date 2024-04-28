@@ -23,14 +23,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ScreenOrientation from "expo-screen-orientation";
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 
-export default function ShapeFindScreen() {
+export default function EveryDayObjectFindScreen() {
     const curLevel = 10;
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
-    const [cloudText, setCloudText] = useState<string>("Find the Sqaure!");
+    const [cloudText, setCloudText] = useState<string>("Find the Comb!");
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [border, setBorder] = useState<string>("");
     const [progressWidth, setProgressWidth] = useState<number>(0);
-    const [shapeLevel, setShapeLevel] = useState<number | null>();
+    const [everyDayObjectLevel, setEveryDayObjectLevel] = useState<
+        number | null
+    >();
     // Function to handle press on feature pressables
     const [userData, setUserData] = useState<any>(null);
     const [levelsFinishedToday, setLevelsFinishedToday] = useState(0);
@@ -136,7 +138,7 @@ export default function ShapeFindScreen() {
             if (!user) {
                 router.replace("/");
             } else {
-                if (!shapeLevel) {
+                if (!everyDayObjectLevel) {
                     const docRef = doc(db, "users", user.uid);
                     const docSnap = await getDoc(docRef);
                     if (!docSnap.exists()) {
@@ -197,12 +199,12 @@ export default function ShapeFindScreen() {
         };
 
         addUserDocument();
-    }, [user, shapeLevel, setShapeLevel]);
+    }, [user, everyDayObjectLevel, setEveryDayObjectLevel]);
 
     useEffect(() => {
         if (userData) {
             setProgressWidth(
-                userData.shapes.cLArray.reduce(
+                userData.everyDayObjects.cLArray.reduce(
                     (acc: number, cur: number) => acc + cur,
                     0
                 )
@@ -213,15 +215,18 @@ export default function ShapeFindScreen() {
     const handleNextPressIn = async () => {
         // console.log(userData);
         if (levelsFinishedToday < 10 && user) {
-            if (userData.shapes.cLArray[curLevel - 1] === 0 && isComplete) {
+            if (
+                userData.everyDayObjects.cLArray[curLevel - 1] === 0 &&
+                isComplete
+            ) {
                 const newBirdLevel = curLevel + 1;
-                const newBirdLevelArray = [...userData.shapes.cLArray];
+                const newBirdLevelArray = [...userData.everyDayObjects.cLArray];
                 newBirdLevelArray[curLevel - 1] = 1;
-                const fC = userData.shapes.fC + 1;
+                const fC = userData.everyDayObjects.fC + 1;
                 const newUserData = {
                     ...userData,
-                    shapes: {
-                        ...userData.shapes,
+                    everyDayObjects: {
+                        ...userData.everyDayObjects,
                         cLArray: newBirdLevelArray,
                         cL: newBirdLevel,
                         fC: fC,
@@ -232,13 +237,13 @@ export default function ShapeFindScreen() {
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
                 incrementLevelsFinished();
-                router.replace("/shapes/level11");
+                router.replace("/everyDayObjects/level11");
             } else {
                 const newBirdLevel = curLevel + 1;
                 const newUserData = {
                     ...userData,
-                    shapes: {
-                        ...userData.shapes,
+                    everyDayObjects: {
+                        ...userData.everyDayObjects,
                         cL: newBirdLevel,
                     },
                 };
@@ -246,12 +251,12 @@ export default function ShapeFindScreen() {
                 const docRef = doc(db, "users", user.uid);
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
-                router.replace("/shapes/level11");
+                router.replace("/everyDayObjects/level11");
             }
         } else {
             setCloudText("You have finished all levels for today");
             setTimeout(() => {
-                router.replace("/shapes/");
+                router.replace("/everyDayObjects/");
             }, 5000);
         }
     };
@@ -297,7 +302,7 @@ export default function ShapeFindScreen() {
             )}
             <View className="absolute z-50 flex flex-row items-center bg-transparent top-10 left-4">
                 <TouchableOpacity
-                    onPress={() => router.replace("/shapes/level9")}
+                    onPress={() => router.replace("/everyDayObjects/level9")}
                     className=""
                 >
                     <AntDesign name="caretleft" size={30} color="#FB923C" />
@@ -352,12 +357,12 @@ export default function ShapeFindScreen() {
                     }`}
                 >
                     <Image
-                        source={require("@/assets/images/shapes/find-shapes.png")}
+                        source={require("@/assets/images/everyDayObjects/findeverydayobjects.jpg")}
                         className="h-56 rounded-lg w-96"
                     />
                     <Pressable
                         onPress={handleObjectPress}
-                        className={`absolute w-28  h-24 bg-transparent  ${border} left-8 top-2`}
+                        className={`absolute w-32 h-36 bg-transparent  ${border}  right-8 top-4`}
                     ></Pressable>
                 </View>
             </View>
