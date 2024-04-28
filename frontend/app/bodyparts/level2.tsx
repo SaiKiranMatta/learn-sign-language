@@ -23,9 +23,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ScreenOrientation from "expo-screen-orientation";
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 
-export default function EveryDayObjectDrawScreen() {
+export default function BodypartDrawScreen() {
     const curLevel = 2;
-    const answer = "E";
+    const answer = "B";
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
     const [cloudText, setCloudText] = useState<string>(
         "Draw the alphabet of this sign!"
@@ -33,9 +33,7 @@ export default function EveryDayObjectDrawScreen() {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [border, setBorder] = useState<string>("");
     const [progressWidth, setProgressWidth] = useState<number>(0);
-    const [everyDayObjectLevel, setEveryDayObjectLevel] = useState<
-        number | null
-    >();
+    const [bodypartLevel, setBodypartLevel] = useState<number | null>();
     // Function to handle press on feature pressables
     const [userData, setUserData] = useState<any>(null);
     const [levelsFinishedToday, setLevelsFinishedToday] = useState(0);
@@ -170,7 +168,7 @@ export default function EveryDayObjectDrawScreen() {
             if (!user) {
                 router.replace("/");
             } else {
-                if (!everyDayObjectLevel) {
+                if (!bodypartLevel) {
                     const docRef = doc(db, "users", user.uid);
                     const docSnap = await getDoc(docRef);
                     if (!docSnap.exists()) {
@@ -231,12 +229,12 @@ export default function EveryDayObjectDrawScreen() {
         };
 
         addUserDocument();
-    }, [user, everyDayObjectLevel, setEveryDayObjectLevel]);
+    }, [user, bodypartLevel, setBodypartLevel]);
 
     useEffect(() => {
         if (userData) {
             setProgressWidth(
-                userData.everyDayObjects.cLArray.reduce(
+                userData.bodyparts.cLArray.reduce(
                     (acc: number, cur: number) => acc + cur,
                     0
                 )
@@ -247,22 +245,17 @@ export default function EveryDayObjectDrawScreen() {
     const handleNextPressIn = async () => {
         // console.log(userData);
         if (levelsFinishedToday < 10 && user) {
-            if (
-                userData.everyDayObjects.cLArray[curLevel - 1] === 0 &&
-                isComplete
-            ) {
-                const newEveryDayObjectLevel = curLevel + 1;
-                const newEveryDayObjectLevelArray = [
-                    ...userData.everyDayObjects.cLArray,
-                ];
-                newEveryDayObjectLevelArray[curLevel - 1] = 1;
-                const sC = userData.everyDayObjects.sC + 1;
+            if (userData.bodyparts.cLArray[curLevel - 1] === 0 && isComplete) {
+                const newBodypartLevel = curLevel + 1;
+                const newBodypartLevelArray = [...userData.bodyparts.cLArray];
+                newBodypartLevelArray[curLevel - 1] = 1;
+                const sC = userData.bodyparts.sC + 1;
                 const newUserData = {
                     ...userData,
-                    everyDayObjects: {
-                        ...userData.everyDayObjects,
-                        cLArray: newEveryDayObjectLevelArray,
-                        cL: newEveryDayObjectLevel,
+                    bodyparts: {
+                        ...userData.bodyparts,
+                        cLArray: newBodypartLevelArray,
+                        cL: newBodypartLevel,
                         sC: sC,
                     },
                 };
@@ -271,26 +264,26 @@ export default function EveryDayObjectDrawScreen() {
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
                 incrementLevelsFinished();
-                router.replace("/everyDayObjects/level3");
+                router.replace("/bodyparts/level3");
             } else {
-                const newEveryDayObjectLevel = curLevel + 1;
+                const newBodypartLevel = curLevel + 1;
                 const newUserData = {
                     ...userData,
-                    everyDayObjects: {
-                        ...userData.everyDayObjects,
-                        cL: newEveryDayObjectLevel,
+                    bodyparts: {
+                        ...userData.bodyparts,
+                        cL: newBodypartLevel,
                     },
                 };
 
                 const docRef = doc(db, "users", user.uid);
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
-                router.replace("/everyDayObjects/level3");
+                router.replace("/bodyparts/level3");
             }
         } else {
             setCloudText("You have finished all levels for today");
             setTimeout(() => {
-                router.replace("/everyDayObjects/");
+                router.replace("/bodyparts/");
             }, 5000);
         }
     };
@@ -336,7 +329,7 @@ export default function EveryDayObjectDrawScreen() {
             )}
             <View className="absolute z-50 flex flex-row items-center bg-transparent top-10 left-4">
                 <TouchableOpacity
-                    onPress={() => router.replace("/everyDayObjects/level1")}
+                    onPress={() => router.replace("/bodyparts/level1")}
                     className=""
                 >
                     <AntDesign name="caretleft" size={30} color="#FB923C" />
@@ -391,7 +384,7 @@ export default function EveryDayObjectDrawScreen() {
                     }`}
                 >
                     <Image
-                        source={require("@/assets/images/alphabet/e.jpeg")}
+                        source={require("@/assets/images/alphabet/b.jpeg")}
                         className="w-48 h-56 rounded-lg"
                     />
                 </View>
