@@ -45,10 +45,10 @@ export default function LandingScreen() {
                 router.replace("/");
             } else {
                 if (!userData) {
-                    setFirstLogin(true);
                     const docRef = doc(db, "users", user.uid);
                     const docSnap = await getDoc(docRef);
                     if (!docSnap.exists()) {
+                        setFirstLogin(true);
                         try {
                             const usersRef = collection(db, "users");
                             const docRef = await setDoc(
@@ -106,20 +106,7 @@ export default function LandingScreen() {
         };
 
         addUserDocument();
-    }, [user]);
-
-    const setFirstLoginFalse = async () => {
-        if (user) {
-            const newFC = 1;
-            const newUserData = {
-                ...userData,
-                FL: newFC,
-            };
-            const docRef = doc(db, "users", user.uid);
-            await setDoc(docRef, newUserData);
-            setUserData(newUserData);
-        }
-    };
+    }, []);
 
     const handlePressIn = (text: string, index: number) => {
         if (user) {
@@ -169,6 +156,7 @@ export default function LandingScreen() {
                     className="absolute z-50 bg-transparent left-4 top-8"
                 >
                     <FontAwesome6
+                        style={styles.shadow}
                         name="person-circle-check"
                         size={40}
                         color="#FB923C"
@@ -177,6 +165,7 @@ export default function LandingScreen() {
             )}
             {!user ? (
                 <TouchableOpacity
+                    style={styles.shadow}
                     onPress={() => {
                         router.push("/login");
                     }}
@@ -188,6 +177,7 @@ export default function LandingScreen() {
                 </TouchableOpacity>
             ) : (
                 <TouchableOpacity
+                    style={styles.shadow}
                     onPress={() => {
                         signOut();
                     }}
@@ -231,6 +221,7 @@ export default function LandingScreen() {
                         onPressOut={() => handlePressOut()}
                     >
                         <View
+                            style={styles.shadow}
                             className={`rounded-full p-4 bg-[#c8fdff] overflow-hidden ${
                                 activeIndex === 1 ? "scale-105" : ""
                             }`}
@@ -248,6 +239,7 @@ export default function LandingScreen() {
                         onPressOut={() => handlePressOut()}
                     >
                         <View
+                            style={styles.shadow}
                             className={`rounded-full p-2 bg-pink-200 ${
                                 activeIndex === 2 ? "scale-105" : ""
                             }`}
@@ -266,6 +258,7 @@ export default function LandingScreen() {
                         onPressOut={() => handlePressOut()}
                     >
                         <View
+                            style={styles.shadow}
                             className={`rounded-full p-2 bg-[#c8fdff] ${
                                 activeIndex === 4 ? "scale-105" : ""
                             }`}
@@ -283,6 +276,7 @@ export default function LandingScreen() {
                         onPressOut={() => handlePressOut()}
                     >
                         <View
+                            style={styles.shadow}
                             className={`rounded-full p-2 bg-[#deffc8] overflow-hidden ${
                                 activeIndex === 5 ? "scale-105" : ""
                             }`}
@@ -300,6 +294,7 @@ export default function LandingScreen() {
                         onPressOut={() => handlePressOut()}
                     >
                         <View
+                            style={styles.shadow}
                             className={`rounded-full p-2 overflow-hidden  bg-amber-200 ${
                                 activeIndex === 6 ? "scale-105" : ""
                             }`}
@@ -317,6 +312,7 @@ export default function LandingScreen() {
                         onPressOut={() => handlePressOut()}
                     >
                         <View
+                            style={styles.shadow}
                             className={`rounded-full p-2 overflow-hidden bg-red-200 ${
                                 activeIndex === 6 ? "scale-105" : ""
                             }`}
@@ -334,3 +330,9 @@ export default function LandingScreen() {
         </SafeAreaView>
     );
 }
+
+const styles = StyleSheet.create({
+    shadow: {
+        elevation: 10,
+    },
+});
