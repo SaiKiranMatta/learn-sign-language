@@ -33,7 +33,7 @@ import {
 } from "react-native-webrtc";
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 
-export default function ShapeDetectcreen() {
+export default function EveryDayObjectDetectcreen() {
     const curLevel = 8;
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
     const [cloudText, setCloudText] = useState<string>(
@@ -42,7 +42,9 @@ export default function ShapeDetectcreen() {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [border, setBorder] = useState<string>("");
     const [progressWidth, setProgressWidth] = useState<number>(0);
-    const [shapeLevel, setShapeLevel] = useState<number | null>();
+    const [everyDayObjectLevel, setEveryDayObjectLevel] = useState<
+        number | null
+    >();
     // Function to handle press on feature pressables
     const [userData, setUserData] = useState<any>(null);
     const [levelsFinishedToday, setLevelsFinishedToday] = useState(0);
@@ -404,7 +406,7 @@ export default function ShapeDetectcreen() {
             if (!user) {
                 router.replace("/");
             } else {
-                if (!shapeLevel) {
+                if (!everyDayObjectLevel) {
                     const docRef = doc(db, "users", user.uid);
                     const docSnap = await getDoc(docRef);
                     if (!docSnap.exists()) {
@@ -465,12 +467,12 @@ export default function ShapeDetectcreen() {
         };
 
         addUserDocument();
-    }, [user, shapeLevel, setShapeLevel]);
+    }, [user, everyDayObjectLevel, setEveryDayObjectLevel]);
 
     useEffect(() => {
         if (userData) {
             setProgressWidth(
-                userData.shapes.cLArray.reduce(
+                userData.everyDayObjects.cLArray.reduce(
                     (acc: number, cur: number) => acc + cur,
                     0
                 )
@@ -484,15 +486,18 @@ export default function ShapeDetectcreen() {
             toggleCamera();
         }
         if (levelsFinishedToday < 10 && user) {
-            if (userData.shapes.cLArray[curLevel - 1] === 0 && isComplete) {
+            if (
+                userData.everyDayObjects.cLArray[curLevel - 1] === 0 &&
+                isComplete
+            ) {
                 const newBirdLevel = curLevel + 1;
-                const newBirdLevelArray = [...userData.shapes.cLArray];
+                const newBirdLevelArray = [...userData.everyDayObjects.cLArray];
                 newBirdLevelArray[curLevel - 1] = 1;
-                const sC = userData.shapes.sC + 1;
+                const sC = userData.everyDayObjects.sC + 1;
                 const newUserData = {
                     ...userData,
-                    shapes: {
-                        ...userData.shapes,
+                    everyDayObjects: {
+                        ...userData.everyDayObjects,
                         cLArray: newBirdLevelArray,
                         cL: newBirdLevel,
                         sC: sC,
@@ -503,13 +508,13 @@ export default function ShapeDetectcreen() {
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
                 incrementLevelsFinished();
-                router.replace("/shapes/level9");
+                router.replace("/everyDayObjects/level9");
             } else {
                 const newBirdLevel = curLevel + 1;
                 const newUserData = {
                     ...userData,
-                    shapes: {
-                        ...userData.shapes,
+                    everyDayObjects: {
+                        ...userData.everyDayObjects,
                         cL: newBirdLevel,
                     },
                 };
@@ -517,12 +522,12 @@ export default function ShapeDetectcreen() {
                 const docRef = doc(db, "users", user.uid);
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
-                router.replace("/shapes/level9");
+                router.replace("/everyDayObjects/level9");
             }
         } else {
             setCloudText("You have finished all levels for today");
             setTimeout(() => {
-                router.replace("/shapes/");
+                router.replace("/everyDayObjects/");
             }, 5000);
         }
     };
@@ -568,7 +573,7 @@ export default function ShapeDetectcreen() {
             )}
             <View className="absolute z-50 flex flex-row items-center bg-transparent top-10 left-4">
                 <TouchableOpacity
-                    onPress={() => router.replace("/shapes/level7")}
+                    onPress={() => router.replace("/everyDayObjects/level7")}
                     className=""
                 >
                     <AntDesign name="caretleft" size={30} color="#FB923C" />
@@ -685,14 +690,14 @@ export default function ShapeDetectcreen() {
                     className={` ml-4  mt-2 rounded-lg flex flex-col justify-between  bg-[#FDD58D]`}
                 >
                     <Image
-                        source={require("@/assets/images/shapes/circle.png")}
+                        source={require("@/assets/images/everyDayObjects/scissors.jpg")}
                         className="w-48 h-48 rounded-lg "
                     />
-                    <View className="flex flex-row items-center justify-start bg-transparent">
+                    <View className="flex flex-row items-center justify-start scale-75 bg-transparent -left-8">
                         <View className=" p-2 pb-1  w-8 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
                             <Text
                                 className={`text-2xl text-center font-bold  ${
-                                    ans[0] === "C"
+                                    ans[0] === "S"
                                         ? "text-green-600"
                                         : "text-red-600"
                                 }`}
@@ -702,23 +707,28 @@ export default function ShapeDetectcreen() {
                         </View>
                         <View className=" p-2 w-8 pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
                             <Text className="text-2xl text-center font-bold text-[#FECE78]">
+                                C
+                            </Text>
+                        </View>
+                        <View className=" p-2 pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
+                            <Text className="text-2xl font-bold text-[#FECE78]">
                                 I
                             </Text>
                         </View>
                         <View className=" p-2 pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
                             <Text className="text-2xl font-bold text-[#FECE78]">
-                                R
+                                S
                             </Text>
                         </View>
                         <View className=" p-2 pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
                             <Text className="text-2xl font-bold text-[#FECE78]">
-                                C
+                                S
                             </Text>
                         </View>
                         <View className=" p-2 w-8  pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
                             <Text
                                 className={`text-2xl text-center font-bold  ${
-                                    ans[1] === "L"
+                                    ans[1] === "O"
                                         ? "text-green-600"
                                         : "text-red-600"
                                 }`}
@@ -729,7 +739,7 @@ export default function ShapeDetectcreen() {
 
                         <View className=" p-2 pb-1 mr-2 mt-6 rounded-lg bg-[#FEF8EE] border-b-8 border-[#DBB780]">
                             <Text className="text-2xl font-bold text-[#FECE78]">
-                                E
+                                R
                             </Text>
                         </View>
                     </View>
