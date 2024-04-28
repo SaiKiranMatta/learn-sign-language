@@ -72,7 +72,7 @@ export default function ShapeFindScreen() {
     const handleObjectPress = () => {
         setIsComplete(true);
         setBorder("border border-2 border-green-600");
-        setCloudText("Good Job, Ball Found!");
+        setCloudText("Good Job, Shape Found!");
     };
     useEffect(() => {
         // Load the count and last update date from AsyncStorage when the component mounts

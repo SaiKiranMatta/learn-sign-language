@@ -24,7 +24,7 @@ ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 
 export default function ShapeAlphaScreen() {
     const curLevel = 5;
-    const alphaWord = "CIRCLES";
+    const alphaWord = "CIRCLE";
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
     const [cloudText, setCloudText] = useState<string>("Learn these signs!");
     const [activeIndex, setActiveIndex] = useState<number | null>(null);

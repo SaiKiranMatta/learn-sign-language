@@ -480,6 +480,9 @@ export default function ShapeDetectcreen() {
 
     const handleNextPressIn = async () => {
         // console.log(userData);
+        if (!isOffCam) {
+            toggleCamera();
+        }
         if (levelsFinishedToday < 10 && user) {
             if (userData.shapes.cLArray[curLevel - 1] === 0 && isComplete) {
                 const newBirdLevel = curLevel + 1;
