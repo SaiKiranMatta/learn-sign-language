@@ -307,7 +307,7 @@ export default function LandingScreen() {
                     </Pressable>
                     <Pressable
                         className="absolute right-[-40px] bottom-16  "
-                        onPress={() => handlePress("/everyday")}
+                        onPress={() => handlePress("/everyDayObjects")}
                         onPressIn={() => handlePressIn("Every Day Objects", 3)}
                         onPressOut={() => handlePressOut()}
                     >
