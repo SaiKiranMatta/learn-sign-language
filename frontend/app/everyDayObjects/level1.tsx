@@ -22,15 +22,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ScreenOrientation from "expo-screen-orientation";
 ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 
-export default function ShapeAlphaScreen() {
+export default function EveryDayObjectAlphaScreen() {
     const curLevel = 1;
-    const alphaWord = "SHAPES";
+    const alphaWord = "DAILY";
+    const alphaWord2 = "OBJECT";
     const { user, signOut } = useAuth(); // Get user from the AuthProvider
     const [cloudText, setCloudText] = useState<string>("Learn these signs!");
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [border, setBorder] = useState<string>("");
     const [progressWidth, setProgressWidth] = useState<number>(0);
-    const [shapeLevel, setShapeLevel] = useState<number | null>();
+    const [everyDayObjectLevel, setEveryDayObjectLevel] = useState<
+        number | null
+    >();
     // Function to handle press on feature pressables
     const [userData, setUserData] = useState<any>(null);
     const [levelsFinishedToday, setLevelsFinishedToday] = useState(0);
@@ -97,7 +100,7 @@ export default function ShapeAlphaScreen() {
             if (!user) {
                 router.replace("/");
             } else {
-                if (!shapeLevel) {
+                if (!everyDayObjectLevel) {
                     const docRef = doc(db, "users", user.uid);
                     const docSnap = await getDoc(docRef);
                     if (!docSnap.exists()) {
@@ -158,12 +161,12 @@ export default function ShapeAlphaScreen() {
         };
 
         addUserDocument();
-    }, [user, shapeLevel, setShapeLevel]);
+    }, [user, everyDayObjectLevel, setEveryDayObjectLevel]);
 
     useEffect(() => {
         if (userData) {
             setProgressWidth(
-                userData.shapes.cLArray.reduce(
+                userData.everyDayObjects.cLArray.reduce(
                     (acc: number, cur: number) => acc + cur,
                     0
                 )
@@ -174,16 +177,18 @@ export default function ShapeAlphaScreen() {
     const handleNextPressIn = async () => {
         // console.log(userData);
         if (levelsFinishedToday < 10 && user) {
-            if (userData.shapes.cLArray[curLevel - 1] === 0) {
-                const newShapeLevel = curLevel + 1;
-                const newShapeLevelArray = [...userData.shapes.cLArray];
-                newShapeLevelArray[curLevel - 1] = 1;
+            if (userData.everyDayObjects.cLArray[curLevel - 1] === 0) {
+                const newEveryDayObjectLevel = curLevel + 1;
+                const newEveryDayObjectLevelArray = [
+                    ...userData.everyDayObjects.cLArray,
+                ];
+                newEveryDayObjectLevelArray[curLevel - 1] = 1;
                 const newUserData = {
                     ...userData,
-                    shapes: {
-                        ...userData.shapes,
-                        cLArray: newShapeLevelArray,
-                        cL: newShapeLevel,
+                    everyDayObjects: {
+                        ...userData.everyDayObjects,
+                        cLArray: newEveryDayObjectLevelArray,
+                        cL: newEveryDayObjectLevel,
                     },
                 };
 
@@ -191,26 +196,26 @@ export default function ShapeAlphaScreen() {
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
                 incrementLevelsFinished();
-                router.replace("/shapes/level2");
+                router.replace("/everyDayObjects/level2");
             } else {
-                const newShapeLevel = curLevel + 1;
+                const newEveryDayObjectLevel = curLevel + 1;
                 const newUserData = {
                     ...userData,
-                    shapes: {
-                        ...userData.shapes,
-                        cL: newShapeLevel,
+                    everyDayObjects: {
+                        ...userData.everyDayObjects,
+                        cL: newEveryDayObjectLevel,
                     },
                 };
 
                 const docRef = doc(db, "users", user.uid);
                 await setDoc(docRef, newUserData);
                 setUserData(newUserData);
-                router.replace("/shapes/level2");
+                router.replace("/everyDayObjects/level2");
             }
         } else {
             setCloudText("You have finished all levels for today");
             setTimeout(() => {
-                router.replace("/shapes/");
+                router.replace("/everyDayObjects/");
             }, 5000);
         }
     };
@@ -256,7 +261,7 @@ export default function ShapeAlphaScreen() {
             )}
             <View className="absolute z-50 flex flex-row items-center bg-transparent top-10 left-4">
                 <TouchableOpacity
-                    onPress={() => router.replace("/shapes/")}
+                    onPress={() => router.replace("/everyDayObjects/")}
                     className=""
                 >
                     <AntDesign name="caretleft" size={30} color="#FB923C" />
@@ -271,7 +276,10 @@ export default function ShapeAlphaScreen() {
                         color="#FB923C"
                     />
                 </TouchableOpacity>
-                <View className="flex flex-row items-center p-2 ml-2 rounded-md">
+                <View
+                    style={styles.shadow}
+                    className="flex flex-row items-center p-2 ml-2 rounded-md"
+                >
                     <Image
                         source={require("@/assets/images/brain.png")}
                         className="w-6 h-6 mr-2"
@@ -302,7 +310,14 @@ export default function ShapeAlphaScreen() {
 
             <View className="absolute flex pl-48 pr-4 pt-10 items-center bg-[#FDD58D] justify-center w-full h-full">
                 <AlphaWordComponent alphaWord={alphaWord} />
+                <AlphaWordComponent alphaWord={alphaWord2} />
             </View>
         </SafeAreaView>
     );
 }
+
+const styles = StyleSheet.create({
+    shadow: {
+        elevation: 10,
+    },
+});
