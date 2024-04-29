@@ -51,6 +51,7 @@ export default function SignDetectScreen() {
     const [firstAnsFound, setFirstAnsFound] = useState<boolean>(false);
     const [translatedText, setTranslatedText] = useState<string>("loading...");
     const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
+    const WS_URL= process.env.EXPO_PUBLIC_WS_URL;
     const configuration = {
         iceServers: [
             {
@@ -241,7 +242,8 @@ export default function SignDetectScreen() {
     }, [cachedLocalPC, ansSdp]);
 
     const connectWebSocket = () => {
-        const newWs = new WebSocket("ws://192.168.29.52:8000/ws/client1");
+        const ws_url = `${WS_URL}ws/client1`;
+        const newWs = new WebSocket(ws_url);
         newWs.onopen = () => {
             console.log("WebSocket connected");
             setWs(newWs);

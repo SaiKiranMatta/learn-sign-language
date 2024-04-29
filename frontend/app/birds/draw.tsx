@@ -26,6 +26,7 @@ export default function BirdFindScreen() {
     const [progressWidth, setProgressWidth] = useState<string>("24");
     const [paths, setPaths] = useState<string[]>([]);
     const [currentPath, setCurrentPath] = useState<string[]>([]);
+    const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
     const [isClearButtonClicked, setClearButtonClicked] =
         useState<boolean>(false);
     const onTouchEnd = () => {
@@ -70,9 +71,9 @@ export default function BirdFindScreen() {
             <path d="${paths.join("")}" stroke="${
                 isClearButtonClicked ? "transparent" : "black"
             }" fill="transparent" stroke-width="10" strokeLinejoin="round" strokeLinecap="round" /></svg>`;
-
+            const url = `${API_BASE_URL}/convert-svg-to-png`;
             const response = await fetch(
-                "http://192.168.29.52:8000/convert-svg-to-png",
+                url,
                 {
                     method: "POST",
                     headers: {

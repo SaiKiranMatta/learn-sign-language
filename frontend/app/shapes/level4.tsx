@@ -49,6 +49,7 @@ export default function ShapeDetectcreen() {
     const [paths, setPaths] = useState<string[]>([]);
     const [currentPath, setCurrentPath] = useState<string[]>([]);
     const [isComplete, setIsComplete] = useState<boolean>(false);
+    const WS_URL= process.env.EXPO_PUBLIC_WS_URL;
     const [isClearButtonClicked, setClearButtonClicked] =
         useState<boolean>(false);
     const [localStream, setLocalStream] = useState<MediaStream>();
@@ -251,7 +252,8 @@ export default function ShapeDetectcreen() {
     }, [cachedLocalPC, ansSdp]);
 
     const connectWebSocket = () => {
-        const newWs = new WebSocket("ws://192.168.29.52:8000/ws/client1");
+        const ws_url = `${WS_URL}ws/client1`;
+        const newWs = new WebSocket(ws_url);
         newWs.onopen = () => {
             console.log("WebSocket connected");
             setWs(newWs);
