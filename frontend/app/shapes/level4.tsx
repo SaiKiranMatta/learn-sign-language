@@ -49,7 +49,7 @@ export default function ShapeDetectcreen() {
     const [paths, setPaths] = useState<string[]>([]);
     const [currentPath, setCurrentPath] = useState<string[]>([]);
     const [isComplete, setIsComplete] = useState<boolean>(false);
-    const WS_URL= process.env.EXPO_PUBLIC_WS_URL;
+    const WS_URL = process.env.EXPO_PUBLIC_WS_URL;
     const [isClearButtonClicked, setClearButtonClicked] =
         useState<boolean>(false);
     const [localStream, setLocalStream] = useState<MediaStream>();
@@ -485,7 +485,8 @@ export default function ShapeDetectcreen() {
         if (!isOffCam) {
             toggleCamera();
         }
-        if (levelsFinishedToday < 10 && user) {
+        const max_levels = process.env.EXPO_PUBLIC_MAX_LEVELS;
+        if (max_levels && levelsFinishedToday < parseInt(max_levels) && user) {
             if (userData.shapes.cLArray[curLevel - 1] === 0 && isComplete) {
                 const newBirdLevel = curLevel + 1;
                 const newBirdLevelArray = [...userData.shapes.cLArray];

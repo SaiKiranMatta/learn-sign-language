@@ -81,16 +81,13 @@ export default function ShapeDrawScreen() {
                 isClearButtonClicked ? "transparent" : "black"
             }" fill="transparent" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" /></svg>`;
             const url = `${API_BASE_URL}/convert-svg-to-png`;
-            const response = await fetch(
-                url,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ svgData }),
-                }
-            );
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ svgData }),
+            });
 
             if (response.ok) {
                 const data = await response.json();
@@ -245,7 +242,8 @@ export default function ShapeDrawScreen() {
 
     const handleNextPressIn = async () => {
         // console.log(userData);
-        if (levelsFinishedToday < 10 && user) {
+        const max_levels = process.env.EXPO_PUBLIC_MAX_LEVELS;
+        if (max_levels && levelsFinishedToday < parseInt(max_levels) && user) {
             if (userData.shapes.cLArray[curLevel - 1] === 0 && isComplete) {
                 const newShapeLevel = curLevel + 1;
                 const newShapeLevelArray = [...userData.shapes.cLArray];
