@@ -40,7 +40,12 @@ export default function AnimalHomeScreen() {
     };
 
     const handleNextPressIn = () => {
-        if (levelsFinishedToday < 100 && userData) {
+        const max_levels = process.env.EXPO_PUBLIC_MAX_LEVELS;
+        if (
+            max_levels &&
+            levelsFinishedToday < parseInt(max_levels) &&
+            userData
+        ) {
             const animalLevel = userData.animals.cL;
             incrementLevelsFinished();
             switch (animalLevel) {

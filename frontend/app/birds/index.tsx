@@ -44,7 +44,12 @@ export default function BirdHomeScreen() {
     };
 
     const handleNextPressIn = () => {
-        if (levelsFinishedToday < 100 && userData) {
+        const max_levels = process.env.EXPO_PUBLIC_MAX_LEVELS;
+        if (
+            max_levels &&
+            levelsFinishedToday < parseInt(max_levels) &&
+            userData
+        ) {
             const birdLevel = userData.birds.cL;
             incrementLevelsFinished();
             switch (birdLevel) {

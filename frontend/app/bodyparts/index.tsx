@@ -44,7 +44,12 @@ export default function BodypartsHomeScreen() {
     };
 
     const handleNextPressIn = () => {
-        if (levelsFinishedToday < 100 && userData) {
+        const max_levels = process.env.EXPO_PUBLIC_MAX_LEVELS;
+        if (
+            max_levels &&
+            levelsFinishedToday < parseInt(max_levels) &&
+            userData
+        ) {
             const animalLevel = userData.bodyparts.cL;
             incrementLevelsFinished();
             switch (animalLevel) {
