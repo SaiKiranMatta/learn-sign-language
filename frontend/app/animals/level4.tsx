@@ -67,7 +67,7 @@ export default function AnimalDetectcreen() {
     const [firstAnsFound, setFirstAnsFound] = useState<boolean>(false);
     const [translatedText, setTranslatedText] = useState<string>("loading...");
     const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
-    const WS_URL= process.env.EXPO_PUBLIC_WS_URL;
+    const WS_URL = process.env.EXPO_PUBLIC_WS_URL;
     const configuration = {
         iceServers: [
             {
@@ -253,7 +253,7 @@ export default function AnimalDetectcreen() {
 
     const connectWebSocket = () => {
         const ws_url = `${WS_URL}ws/client1`;
-        console.log(ws_url)
+        console.log(ws_url);
         const newWs = new WebSocket(ws_url);
         newWs.onopen = () => {
             console.log("WebSocket connected");
@@ -483,7 +483,8 @@ export default function AnimalDetectcreen() {
 
     const handleNextPressIn = async () => {
         // console.log(userData);
-        if (levelsFinishedToday < 10 && user) {
+        const max_levels = process.env.EXPO_PUBLIC_MAX_LEVELS;
+        if (max_levels && levelsFinishedToday < parseInt(max_levels) && user) {
             if (userData.animals.cLArray[curLevel - 1] === 0 && isComplete) {
                 const newBirdLevel = curLevel + 1;
                 const newBirdLevelArray = [...userData.animals.cLArray];
