@@ -41,6 +41,8 @@ export default function LandingScreen() {
 
     useEffect(() => {
         const addUserDocument = async () => {
+            // Uncomment the below line to clear the Async Storage
+            // await AsyncStorage.clear();
             if (!user) {
                 router.replace("/");
             } else {
