@@ -173,7 +173,8 @@ export default function BirdAlphaScreen() {
 
     const handleNextPressIn = async () => {
         // console.log(userData);
-        if (levelsFinishedToday < 10 && user) {
+        const max_levels = process.env.EXPO_PUBLIC_MAX_LEVELS;
+        if (max_levels && levelsFinishedToday < parseInt(max_levels) && user) {
             if (userData.birds.cLArray[curLevel - 1] === 0) {
                 const newBirdLevel = curLevel + 1;
                 const newBirdLevelArray = [...userData.birds.cLArray];
