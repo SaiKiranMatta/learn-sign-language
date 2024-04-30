@@ -174,7 +174,8 @@ export default function SportAlphaScreen() {
 
     const handleNextPressIn = async () => {
         // console.log(userData);
-        if (levelsFinishedToday < 10 && user) {
+        const max_levels = process.env.EXPO_PUBLIC_MAX_LEVELS;
+        if (max_levels && levelsFinishedToday < parseInt(max_levels) && user) {
             if (userData.sports.cLArray[curLevel - 1] === 0) {
                 const newSportLevel = curLevel + 1;
                 const newSportLevelArray = [...userData.sports.cLArray];
