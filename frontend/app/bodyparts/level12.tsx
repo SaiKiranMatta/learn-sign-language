@@ -67,7 +67,7 @@ export default function BodypartDetectcreen() {
     const [firstAnsFound, setFirstAnsFound] = useState<boolean>(false);
     const [translatedText, setTranslatedText] = useState<string>("loading...");
     const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
-    const WS_URL= process.env.EXPO_PUBLIC_WS_URL;
+    const WS_URL = process.env.EXPO_PUBLIC_WS_URL;
     const configuration = {
         iceServers: [
             {
@@ -485,7 +485,8 @@ export default function BodypartDetectcreen() {
         if (!isOffCam) {
             toggleCamera();
         }
-        if (levelsFinishedToday < 10 && user) {
+        const max_levels = process.env.EXPO_PUBLIC_MAX_LEVELS;
+        if (max_levels && levelsFinishedToday < parseInt(max_levels) && user) {
             if (userData.bodyparts.cLArray[curLevel - 1] === 0 && isComplete) {
                 const newBirdLevel = curLevel + 1;
                 const newBirdLevelArray = [...userData.bodyparts.cLArray];

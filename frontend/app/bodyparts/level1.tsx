@@ -174,7 +174,8 @@ export default function BodypartAlphaScreen() {
 
     const handleNextPressIn = async () => {
         // console.log(userData);
-        if (levelsFinishedToday < 10 && user) {
+        const max_levels = process.env.EXPO_PUBLIC_MAX_LEVELS;
+        if (max_levels && levelsFinishedToday < parseInt(max_levels) && user) {
             if (userData.bodyparts.cLArray[curLevel - 1] === 0) {
                 const newBodypartLevel = curLevel + 1;
                 const newBodypartLevelArray = [...userData.bodyparts.cLArray];
