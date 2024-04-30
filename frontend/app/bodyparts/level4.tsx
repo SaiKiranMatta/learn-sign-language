@@ -62,12 +62,12 @@ export default function BodypartDetectcreen() {
     const [ansSdp, setAnsSdp] = useState();
     const [isRemoteDescSet, setIsRemoteDescSet] = useState<boolean>(false);
     const [ans, setAns] = useState<String[]>(["", ""]);
-    const firstAnswer = "O";
-    const secondAnswer = "B";
+    const firstAnswer = "B";
+    const secondAnswer = "P";
     const [firstAnsFound, setFirstAnsFound] = useState<boolean>(false);
     const [translatedText, setTranslatedText] = useState<string>("loading...");
     const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
-    const WS_URL= process.env.EXPO_PUBLIC_WS_URL;
+    const WS_URL = process.env.EXPO_PUBLIC_WS_URL;
     const configuration = {
         iceServers: [
             {
