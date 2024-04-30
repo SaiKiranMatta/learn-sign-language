@@ -175,7 +175,8 @@ export default function EveryDayObjectAlphaScreen() {
 
     const handleNextPressIn = async () => {
         // console.log(userData);
-        if (levelsFinishedToday < 10 && user) {
+        const max_levels = process.env.EXPO_PUBLIC_MAX_LEVELS;
+        if (max_levels && levelsFinishedToday < parseInt(max_levels) && user) {
             if (userData.everyDayObjects.cLArray[curLevel - 1] === 0) {
                 const newEveryDayObjectLevel = curLevel + 1;
                 const newEveryDayObjectLevelArray = [
